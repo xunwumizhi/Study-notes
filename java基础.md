@@ -292,61 +292,36 @@ hashCode的值是可以相同的。
 
 统计二进制中1的个数，注意**负数**机内码为其补码
 
-**1.** **public** **int** bitCount1(**int** x){  
+```java
+public int bitCount1(int x){
+    int count = 0;  
+    while(x!=0){  
+        count+ = x&1;  
+        x = x>>>1;  
+    }  
+    return count;  
+}  
 
-\2.         **int** count = 0;  
+public int bitCount2(int x){ 
+    int count = 0;  
+    while(x!=0){  
+         if(x<0){  
+            count++;  
+         }  
+         x = x<<1;  
+    }  
+    return count;  
+} 
 
-\3.         **while**(x!=0){  
-
-\4.             count+ = x&1;  
-
-\5.             x = x>>>1;  
-
-\6.         }  
-
-\7.         **return** count;  
-
-\8.   }  
-
- 
-
-**1.** **public** **int** bitCount2(**int** x){  
-
-\2.       **int** count = 0;  
-
-\3.       **while**(x!=0){  
-
-\4.          **if**(x<0){  
-
-\5.             count++;  
-
-\6.          }  
-
-\7.          x = x<<1;  
-
-\8.       }  
-
-\9.       **return** count;  
-
-\10. } 
-
- 
-
-**1.** **public** **int** bitCount3( **int** x ){  
-
-\2.        **int** count = 0;  
-
-\3.        **while** ( x != 0 ){  
-
-\4.          x &= x - 1;  
-
-\5.          count++;  
-
-\6.        }  
-
-\7.        **return** count; 
-
-\8. }
+public int bitCount3( int x ){ 
+    int count = 0;  
+    while ( x != 0 ){  
+         x &= x - 1;  
+         count++;  
+    }  
+    return count; 
+}
+```
 
  
 
@@ -360,17 +335,17 @@ hashCode的值是可以相同的。
 
 答：&运算符有两种用法：(1)按位与；(2)逻辑与。
 
- 
-
-**逻辑与****&&**有个短路特点，前面为假，后面不计算。ans && (ans += Sum_Solution(n - 1));
+逻辑与&&有个短路特点，前面为假，后面不计算。ans && (ans += Sum_Solution(n - 1));
 
  
 
- 
-
-**If(A** **instanceof** **B.class)**
+```
+If(A instanceof B.class)
+```
 
 x instanceof A：检验x是否为类A的实例对象，返回值为boolean型。
+
+
 
 # 基本数据类型及常量池
 
@@ -400,9 +375,10 @@ s = s+1;			 ![img](java基础.assets/wps27.jpg)
 
  
 
+```
 short s1 = 1;
-
 s1 += 1;    //编译正确，+=带有类型转换
+```
 
  
 
