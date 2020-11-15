@@ -1168,7 +1168,7 @@ func main() {
 
  
 
-## **通道**
+## 通道chan
 
 - 通道channel是一种与Goroutine通信的技术
 
@@ -1698,6 +1698,22 @@ func (gp *GoroutinePool) AddWorkers(numWorkers int) {
 }
 
 ```
+
+
+
+# GO并发
+
+> 发送数据
+
+向chan发送数据时，生成一个拷贝值。指针chan会生成指向同个内存的新指针
+
+
+
+> 关闭chan
+
+遍历chan结构中的发送者和接受者队列，存在发送者则panic，而向所有接受者发送零值
+
+
 
 
 

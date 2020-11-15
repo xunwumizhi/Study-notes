@@ -94,7 +94,7 @@ ALTER TABLE users ADD INDEX password(password);
 
 创建联合索引
 联合索引顾名思义就是多个列组成的索引，比如
-EXPLAIN select * from pre_sales_rfq where project_id = 1 and item_id = 1
+EXPLAIN select * from pre_sales_rfq where project_id = 1 and item_id = 1;
 ALTER TABLE users2 ADD INDEX userName_password(userName,password);
 
 ```
@@ -116,11 +116,12 @@ desc <table_name>;
 
 
 
-```
+```mysql
 SELECT id, name, gender, score
 FROM students
 ORDER BY score DESC
 LIMIT 3 OFFSET 0;
+-- LIMIT 0, 3; -- 简写
 ```
 
 分页查询的关键在于，首先要确定每页需要显示的结果数量`pageSize`（这里是3），然后根据当前页的索引`pageIndex`（从1开始），确定`LIMIT`和`OFFSET`应该设定的值：
@@ -172,29 +173,27 @@ JDBC连接数据库：jdbc:mysql://localhost:3306/productStore
 
 ## 引擎
 
-MySQL有以下几种引擎：**ISAM****、MyISAM****、HEAP****（也称为MEMORY****）、InnoDB**
+MySQL有以下几种引擎：ISAM、MyISAM、InnoDB、HEAP（也称为MEMORY）
 
- 
 
-l **ISAM** 
+
+> ISAM
 
 **索引顺序访问方法**（*ISAM*, Indexed Sequential Access Method）该引擎在**读取数据**方面速度很快，而且不占用大量的内存和存储资源；但是ISAM不支持事务处理、不支持外来键、不能够容错、也不支持索引。该引擎在包括MySQL 5.1及其以上版本的数据库中不再支持。
 
- 
-
-l **MyISAM**
+> MyISAM
 
  该引擎基于ISAM数据库引擎，除了提供ISAM里所没有的索引和字段管理等大量功能，MyISAM还使用一种表格锁定的机制来优化多个**并发的读写**操作，但是需要经常运行OPTIMIZE TABLE命令，来恢复被更新机制所浪费的空间，否则碎片也会随之增加，最终影响数据访问性能。
 
-MyISAM强调了**快速读取操作**，主要用于**高负载的****select****，这可能也是MySQL****深受Web****开发的主要原因：在Web****开发中进行的大量数据操作都是读取操作**，所以大多数虚拟主机提供商和Internet平台提供商（Internet Presence Provider，IPP）只允许使用MyISAM格式。
+MyISAM强调了**快速读取操作**，主要用于**高负载的select，这可能也是MySQL深受Web开发的主要原因：在Web开发中进行的大量数据操作都是读取操作**，所以大多数虚拟主机提供商和Internet平台提供商（Internet Presence Provider，IPP）只允许使用MyISAM格式。
 
-**MyISAM****支持全文本搜索，不支持事务**
+**MyISAM支持全文本搜索，不支持事务**
 
 *MyISAM**类型的**表**支持三种不同的存储结构：静态型、动态型、压缩型。*
 
-***静态型\****：指定义的表列的大小是固定（即不含有：xblob**、xtext**、varchar**等长度可变的数据类型），这样MySQL**就会自动使用静态MyISAM**格式。使用静态格式的表的性能比较高，因为在维护和访问以预定格式存储数据时需要的开销很低；但这种高性能是以空间为代价换来的，因为在定义的时候是固定的，所以不管列中的值有多大，都会以最大值为准，占据了整个空间。*
+***静态型\：指定义的表列的大小是固定（即不含有：xblob**、xtext**、varchar**等长度可变的数据类型），这样MySQL**就会自动使用静态MyISAM**格式。使用静态格式的表的性能比较高，因为在维护和访问以预定格式存储数据时需要的开销很低；但这种高性能是以空间为代价换来的，因为在定义的时候是固定的，所以不管列中的值有多大，都会以最大值为准，占据了整个空间。*
 
-***动态型\****：如果列（即使只有一列）定义为动态的（xblob, xtext, varchar**等数据类型），这时MyISAM**就自动使用动态型，虽然动态型的表占用了比静态型表较少的空间，但带来了性能的降低，因为如果**某个字段的内容发生改变则其位置很可能需要移动，（缺少冗余）**这样就会导致碎片的产生，随着数据变化的增多，碎片也随之增加，数据访问性能会随之降低。*
+***动态型\：如果列（即使只有一列）定义为动态的（xblob, xtext, varchar**等数据类型），这时MyISAM**就自动使用动态型，虽然动态型的表占用了比静态型表较少的空间，但带来了性能的降低，因为如果**某个字段的内容发生改变则其位置很可能需要移动，（缺少冗余）**这样就会导致碎片的产生，随着数据变化的增多，碎片也随之增加，数据访问性能会随之降低。*
 
 *对于因碎片增加而降低数据访问性这个问题，有两种解决办法：*
 
@@ -202,17 +201,17 @@ MyISAM强调了**快速读取操作**，主要用于**高负载的****select****
 
 *b**、经常使用optimize table table_name**语句整理表的碎片，恢复由于表数据的更新和删除导致的空间丢失。如果存储引擎不支持 optimize table table_name**则可以转储并重新加载数据，这样也可以减少碎片；*
 
-***压缩型\****：如果在数据库中创建在整个生命周期内只读的表，则应该使用MyISAM**的压缩型表来减少空间的占用*
+***压缩型\：如果在数据库中创建在整个生命周期内只读的表，则应该使用MyISAM**的压缩型表来减少空间的占用*
 
  
 
-l **MEMORY**
+> MEMORY
 
-**功能能等同于MYISAM****，**但数据放在内存而不是磁盘，操作速度更快，适合临时表
+**功能能等同于MYISAM，**但数据放在内存而不是磁盘，操作速度更快，适合临时表
 
  
 
-l **InnoDB**
+> InnoDB
 
 **支持事务但不支持全文本搜索
 **     该存储引擎为MySQL表提供了ACID事务支持、系统崩溃修复能力和多版本并发控制（即MVCC Multi-Version Concurrency Control）的行级锁；该引擎支持自增长（auto_increment）,自增长列的值不能为空，如果在使用的时候为空则自动从现有值开始增值，如果有但是比现在的还大，则直接保存这个值; 该引擎存储引擎支持外键（foreign key） ,外键所在的表称为子表而所依赖的表称为父表。InnoDB引擎在5.5后的MySQL数据库中为默认存储引擎。即MySQL5.5后默认支持事务。
@@ -225,17 +224,18 @@ l **InnoDB**
 
 视图是虚拟的表。视图只包含使用时动态检索数据的查询SELECT。（可以理解为SQL语句的包装），视图是预先建立的查询语句,用起来就像使用表一样了
 
-优势：简化复杂的SQL语句；使用表的组成部分；保护数据，可以给用户授予表的特定部分的访问权限
+优势：简化复杂的SQL语句；使用表的组成部分；
+
+保护数据，可以给用户授予表的特定部分的访问权限
 
  
 
-CREATE **VIEW** myfirstView AS
-
+```
+CREATE VIEW myfirstView AS
 SELECT e.ename,e.sal,d.dname
-
 FROM emp e JOIN dept d
-
-ON e.deptno=d.deptno
+ON e.deptno=d.deptno;
+```
 
 将上面查询语句包装成一个虚拟表，只是可以查询出结果集的SQL，并不是真正的表，使用时可以看做一张表。
 
@@ -251,21 +251,17 @@ WHERE xxxxx
 
 ## 存储过程
 
-存储过程是预先写好并编译好的[SQL](https://www.baidu.com/s?wd=SQL&tn=44039180_cpr&fenlei=mv6quAkxTZn0IZRqIHckPjm4nH00T1dBPHKWuHc4rADkmHTsmhn30ZwV5Hcvrjm3rH6sPfKWUMw85HfYnjn4nH6sgvPsT6KdThsqpZwYTjCEQLGCpyw9Uz4Bmy-bIi4WUvYETgN-TLwGUv3EnHnsP1RvP1bv)程序。
+存储过程是预先写好并编译好的SQL程序。
  存储过程和函数区别：函数是预先写好的代码片断,有系统函数,也有自定义函数。
 
-
-**CREATE PROCEDURE xxxxx()**
-
-**BEGIN**
-
-**xxxx**
-
-**Xxxx**
-
-**Xxx;**
-
-**END;**
+```
+CREATE PROCEDURE xxxxx()
+BEGIN
+xxxx
+Xxxx
+Xxx;
+END;
+```
 
  
 
@@ -287,21 +283,14 @@ DML语句的自动响应，某些语句自动执行，SQL语句（或位于BEGIN
 
  
 
-CREATE TRIGGER newproduct AFTER INSERT ON products 
-
-FOR EACH ROW SELECT ‘Product added ’;
-
 每条插入语句执行后会显示‘Product added ’
 
-## 关系运算
+```
+CREATE TRIGGER newproduct AFTER INSERT ON products 
+FOR EACH ROW SELECT ‘Product added ’;
+```
 
-自然连接、笛卡尔积、集合运算
 
- 
-
- 
-
- 
 
 # 索引与散列
 
@@ -327,27 +316,23 @@ CREATE INDEX wula_index ON student(id);
 
 用作查找的属性，**搜索码**
 
- 
+
+
+
 
 索引是对数据库表中**一列或多列**的值进行排序的一种结构，使用索引可快速访问数据库表中的特定信息。如果想按特定职员的姓来查找他或她，则与在表中搜索所有的行相比，索引有助于更快地获取信息。
 
 例如这样一个查询：select * from table1 where id=10000。如果没有索引，必须遍历整个表，直到ID等于10000的这一行被找到为止；有了索引之后（比如使用B+搜索树）(必须是在ID这一列上建立的索引，即可在索引中查找。由于索引是经过某种算法优化过的，因而查找次数要少的多。
 
- 
 
-**顺序索引（不对查找码****key****进行处理）**
 
-稠密索引和稀疏索引
 
-多级索引，树结构的索引
-
-索引自动生成：大多数数据库会在主键上自动创建一个索引。
 
 ### B+树索引
 
-**B****树**
+>  B树
 
-​    是一种M路搜索树（并不是二叉的）：
+​    B tree是一种M路搜索树（并不是二叉的）：
 
 ​    1.定义任意非叶子结点最多M个儿子；且M>2；
 
@@ -357,7 +342,7 @@ CREATE INDEX wula_index ON student(id);
 
 4.每个节点孩子数比关键字多1个
 
-​    
+
 
 如：（M=3）
 
@@ -371,7 +356,7 @@ CREATE INDEX wula_index ON student(id);
 
  
 
-**B****树的特性：**
+B树的特性：
 
 ​    1.关键字集合分布在整颗树中；
 
@@ -397,25 +382,20 @@ CREATE INDEX wula_index ON student(id);
 
 M/2的结点；删除结点时，需将两个不足M/2的兄弟结点合并；
 
- 
 
-**H =** **log┌m/2┐((N+1)/2 )+1** **//****根节点，高度定义为****1**
 
- 
-
- 
-
-**B+****树**
+>  B+树
 
  B+树是B树的变体，也是一种多路搜索树：
 
 ​    其定义基本与B-树同，除了：
 
-\1.     非叶子结点的子树指针与关键字个数相同；
+- 非叶子结点的子树指针与关键字个数相同；
 
-​    4.**所有关键字都在叶子结点出现**；
+- **所有关键字都在叶子结点出现**；
+- 所有叶子节点集间增加指针
 
-​    2.非叶子结点K[i]的子树指针P[i]，指向关键字值**[**K[i], K[i+1])的子树（关键字可重复而B-树是开区间，不许重复）；
+​    2.非叶子结点K[i]的子树指针P[i]，指向关键字值**[**K[i], K[i+1])的子树（关键字可重复而B-树是开区间，不许重复）；[5,10)
 
 ​    3.为所有叶子结点增加一个链指针；
 
@@ -427,9 +407,7 @@ M/2的结点；删除结点时，需将两个不足M/2的兄弟结点合并；
 
 数据库索引采用B+树的主要原因是B树在提高了磁盘IO性能的同时并没有解决元素遍历的效率低下的问题。正是为了解决这个问题，B+树应运而生。B+树只要遍历叶子节点就可以实现整棵树的遍历。而且在数据库中基于范围的查询是非常频繁的，而B树不支持这样的操作（或者说效率太低）。
 
- 
 
- 
 
 B+的特性：
 
@@ -449,37 +427,7 @@ https://blog.csdn.net/weixin_30531261/article/details/79312676
 
  
 
-MyISAM和InnoDB的索引实现 - 立超的专栏 - 博客园 
 
-https://www.cnblogs.com/zlcxbb/p/5757245.html
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
-**散列索引**
-
-桶，存储一条或多条记录的单位，通常一个桶就是一个磁盘块。
-
-**散列冲突**：开放地址法，分离链
-
-**动态散列**：桶可以分裂，合并
-
- 
-
- 
-
- 
 
 ## 索引类型：
 
@@ -515,7 +463,9 @@ https://www.cnblogs.com/s-b-b/p/8334593.html
 
 **数据行的物理顺序与聚集索引列值的顺序相同**，如果我们查询id比较靠后的数据，那么这行数据的地址在磁盘中的物理地址也会比较靠后。而且由于物理排列方式与聚集索引的顺序相同，所以也就只能建立一个聚集索引了。
 
- 
+ 自增主键ID，是一种聚集索引
+
+
 
  
 
@@ -547,29 +497,9 @@ select colum1 from table where colum1 = ? and colum2 > ?
 
 位图：属性列取值有限，这个有限的范围就是位图，性别的位图：男，女，阶级的位图：有产者，无产者。
 
- 
+ 搜索码固定已知，为有限的几个值，例如0,1等
 
-## 索引的SQL操作
 
-**创建单个索引**
-
-CREATE INDEX xx_index ON tablexx(xxname);
-
-ALTER TABLE users ADD INDEX userName(userName);
-
-ALTER TABLE users ADD INDEX password(password);
-
- 
-
-**创建联合索引**
-
-联合索引顾名思义就是**多个列组成的索引**，比如
-
-EXPLAIN select * from pre_sales_rfq where project_id = 1 and item_id = 1
-
-ALTER TABLE users2 ADD INDEX userName_password(userName,password);
-
- 
 
 # 全文本搜索
 
@@ -593,7 +523,7 @@ WHERE Match(note_text) Against(‘ sefa’);
 
 # 命令一览SQL大小写不敏感：
 
-**SQL****：Structure Query Language****。（结构化查询语言）**
+**SQL**：Structure Query Language。（结构化查询语言）
 
 SQL被美国国家标准局（ANSI）确定为关系型数据库语言的美国标准，后来被国际化标准组织（ISO）采纳为关系数据库语言的国际标准。
 
@@ -605,15 +535,15 @@ SQL被美国国家标准局（ANSI）确定为关系型数据库语言的美国�
 
  
 
-**Sql****的分类**
+**Sql**的分类
 
-**DDL****（Data Definition Language）：**数据定义语言**，用来定义数据库对象：库、表、列等；                                                           CREATE、 ALTER、DROP
+**DDL（Data Definition Language）：**数据定义语言，用来定义数据库对象：库、表、列等；                                                           CREATE、 ALTER、DROP
 
-**DML*****（Data Manipulation Language）：**数据操作语言**，用来定义数据库记录（数据）；                                                             INSERT、 UPDATE、 DELETE
+**DML（Data Manipulation Language）：**数据操作语言，用来定义数据库记录（数据）；                                                             INSERT、 UPDATE、 DELETE
 
 DCL（Data Control Language）：**数据控制语言**，用来定义访问权限和安全级别；
 
-**DQL*******（Data Query Language）：**数据查询语言**，用来查询记录（数据）。
+**DQL（Data Query Language）：**数据查询语言，用来查询记录（数据）。
 
 SELECT
 
@@ -839,7 +769,7 @@ drop database tt;
 
 ​     **use tt;** 
 
-​     **source c:\tt.sql**      **（source:****可以执行一个 sql****脚本）**
+​     **source c:\tt.sql**      **（source:可以执行一个 sql脚本）**
 
 ​     
 
@@ -1005,7 +935,7 @@ TRUNCATE TABLE emp;
 
 **truncate** (清空表中的数据)：truncate table 表名
 
-   删除内容、释放空间但不删除表定义(也就是保留表的数据结构)。与drop不同的是,只是清空表数据而已。
+   删除内容、释放空间但不删除表定义(也就是保留表的数据结构)。与drop不同的是,truncate只是清空表数据而已。
 
    truncate不能删除像delete操作行数据。虽然只删除数据，但是比delete彻底，整个删除表数据。
 
@@ -1035,7 +965,7 @@ TRUNCATE TABLE emp;
 
 数据库执行DQL语句不会对数据进行改变，而是让数据库发送结果集给客户端。
 
-**查询返回的结果集是一张虚拟表，表的列结构由SELECT****后面内容决定。**
+**查询返回的结果集是一张虚拟表**，表的列结构由SELECT后面内容决定。
 
  
 
@@ -1079,21 +1009,17 @@ SELECT selection_list /*要查询的列名称*/
 
 条件查询就是在查询时给出**WHERE**子句，可以配合使用如下**运算符及关键字**：
 
-l =、**!=**、<>、<、<=、>、>=；
+```
+=、**!=**、<>、<、<=、>、>=
+BETWEEN…AND
+IN(set)
+IS NULL； IS NOT NULL
 
-l BETWEEN…AND； 
-
-l IN(set)；
-
-l IS NULL； IS NOT NULL
-
-l AND；
-
-l OR；
-
-l NOT； 
-
-l ALL /ANY
+AND
+OR
+NOT
+ALL /ANY
+```
 
  
 
@@ -1207,9 +1133,10 @@ l ALL /ANY
 
 通配符: 
 
+```
 _ 任意一个字符
-
-​    %：任意0~n个字符
+% 任意0~n个字符
+```
 
  
 
@@ -1219,33 +1146,31 @@ _ 任意一个字符
 
 查询姓名由5个字母构成的学生记录
 
-**SELECT \*** 
+```
+SELECT *
+FROM stu
+WHERE sname LIKE '_____';
+```
 
-**FROM stu**
-
-**WHERE sname LIKE '_____';**
-
-模糊查询必须使用LIKE关键字。其中 “_”匹配任意一个字母，5个“_”表示5个任意字母。
-
- 
+模糊查询必须使用LIKE关键字。
 
 查询姓名由5个字母构成，并且第5个字母为“i”的学生记录
 
-**SELECT \*** 
-
-**FROM stu**
-
-**WHERE sname LIKE '____i';**
+```
+SELECT *
+FROM stu
+WHERE sname LIKE '____i';
+```
 
  
 
 查询姓名以“z”开头的学生记录
 
-**SELECT \*** 
-
-**FROM stu**
-
-**WHERE sname LIKE 'z%';**
+```
+SELECT * 
+FROM stu
+WHERE sname LIKE 'z%';
+```
 
 其中“%”匹配0~n个任何字母。
 
@@ -1253,21 +1178,21 @@ _ 任意一个字符
 
 查询姓名中第2个字母为“i”的学生记录
 
-**SELECT \*** 
-
-**FROM stu**
-
-**WHERE sname LIKE '_i%';**
+```
+SELECT *
+FROM stu
+WHERE sname LIKE '_i%';
+```
 
  
 
-**查询姓名中包含“a****”字母的学生记录**
+查询姓名中包含a字母的学生记录
 
-**SELECT \*** 
-
-**FROM stu**
-
-**WHERE sname LIKE '%a%';**
+```
+SELECT * 
+FROM stu
+WHERE sname LIKE '%a%';
+```
 
  
 
@@ -1307,7 +1232,13 @@ comm列有很多记录的值为NULL，因为任何东西与NULL相加结果还�
 
  
 
-### 5　排序order by xx ASC(默认升序) DESC
+### 5　排序order by
+
+ORDER BY xxx ASC;(默认升序) 
+
+DESC
+
+
 
 5.1　查询所有学生记录，按年龄升序排序
 
@@ -1349,15 +1280,13 @@ comm列有很多记录的值为NULL，因为任何东西与NULL相加结果还�
 
 聚合函数是用来做**纵向运算的函数**：对某一项做运算
 
-l COUNT()：统计指定列不为NULL的记录行数；
-
-l MAX()：计算指定列的最大值，如果指定列是字符串类型，那么使用字符串排序运算；
-
-l MIN()：计算指定列的最小值，如果指定列是字符串类型，那么使用字符串排序运算；
-
-l SUM()：计算指定列的数值和，如果指定列类型不是数值类型，那么计算结果为0；
-
-l AVG()：计算指定列的平均值，如果指定列类型不是数值类型，那么计算结果为0；
+```
+COUNT()：统计指定列不为NULL的记录行数；
+MAX()：计算指定列的最大值，如果指定列是字符串类型，那么使用字符串排序运算；
+MIN()：计算指定列的最小值，如果指定列是字符串类型，那么使用字符串排序运算；
+SUM()：计算指定列的数值和，如果指定列类型不是数值类型，那么计算结果为0；
+AVG()：计算指定列的平均值，如果指定列类型不是数值类型，那么计算结果为0；
+```
 
  
 
@@ -1547,15 +1476,9 @@ l 第三页记录起始行为20，一共查询10行；
 
  
 
- 
-
 ​     查询语句书写顺序：select – from- where- group by- having- order by-limit
 
 ​     查询语句执行顺序：from - where -group by - having - select - order by-limit   
-
- 
-
- 
 
  
 
@@ -1579,71 +1502,62 @@ l 第三页记录起始行为20，一共查询10行；
 
 实体完整性的作用：标识每一行数据不重复。
 
-**约束类型：** **主键约束（primary key****）** **唯一约束(unique)** **自动增长列(auto_increment)**
+**约束类型：**唯一约束(unique)， 主键约束（primary key），自动增长列(auto_increment)
 
  
 
-**1.1****主键约束（primary key****）**
+**1.1主键约束（primary key）**
 
 注：每个表中要有一个主键。
 
-**特点两个：数据唯一，且不能为null****，比UNIQUE****多一个不为null****要求**
+**特点两个：数据唯一，且不能为null，比唯一约束UNIQUE多一个不为null要求**
 
  
 
 第一种添加方式：
 
+```
 CREATE TABLE student(
-
 id int primary key,
-
 name varchar(50)
-
 );
+```
 
  
 
 第二种添加方式：此种方式优势在于，可以创建联合主键
 
+```mysql
 CREATE TABLE student(
-
 id int,
-
 name varchar(50),
-
 primary key(id)
-
 );
 
+-- 联合主键
 CREATE TABLE student(
-
 classid int,
-
 stuid int,
-
 name varchar(50),
-
 primary key(classid，stuid)
-
 );
+```
 
  
 
-第三种添加方式：
+第三种添加方式：先创建，命令添加主键
 
+```
 CREATE TABLE student(
-
 id int,
-
 name varchar(50)
-
 );
-
 ALTER TABLE student ADD PRIMARY KEY (id);
+```
 
  
 
-**1.2****唯一约束(unique)****：
+**1.2唯一约束(unique)：
 **     特点：数据不能重复。
 
 CREATE TABLE student(
@@ -1658,7 +1572,7 @@ Name varchar(50) unique
 
  
 
-**1.3****自动增长列(auto_increment)** 
+**1.3自动增长列(auto_increment)** 
 
  sqlserver数据库 (identity) oracle数据库( sequence)
 
@@ -1686,7 +1600,7 @@ INSERT INTO student(name) values(‘tom’);
 
 check约束（mysql不支持）check(sex='男' or sex='女')
 
-**1.1** **数据类型:****（数值类型、日期类型、字符串类型）**
+**1.1** **数据类型:（数值类型、日期类型、字符串类型）**
 
  
 
@@ -1726,79 +1640,49 @@ insert into student1 values(2,'jerry',default);
 
 ### 3、引用完整性（参照完整性）
 
-```
 外键约束：FOREIGN KEY 
-```
 
-例：
 
+
+```sql
 CREATE TABLE student(
-
-sid int pirmary key,
-
-name varchar(50) not null,
-
-sex varchar(10) default ‘男’
-
+    sid int pirmary key,
+    name varchar(50) not null,
+    sex varchar(10) default ‘男’
 );
-
- 
 
 create table score(
+    id int,
+    score int,
+    sid int , -- 外键列的数据类型一定要与主键的类型一致
+    CONSTRAINT fk_sid FOREIGN KEY(sid) REFERENCES student(id)
+); 
+```
 
-​     id int,
 
-​     score int,
-
-​     sid int , -- 外键列的数据类型一定要与主键的类型一致
-
-​     CONSTRAINT fk_sid FOREIGN KEY(sid) REFERENCES student(id)
-
-); --难懂
-
- 
-
-另外一种
-
-create table ‘score’(
-
-​     ‘id’ int,
-
-​     ‘score’ int,
-
-​     ‘sid’ int ,
-
-​    FOREIGN KEY(`sid `) REFERENCES `student` (`id`)
-
-);
-
-(引号都可以不加)
-
- 
-
- 
 
 ## 多表查询（重要）
 
 多表查询有如下几种：
 
-l 合并结果集；**UNION** 、 **UNION ALL**
+- 合并结果集
 
-连接查询
+UNION、 UNION ALL
 
-Ø 内连接 **[INNER] JOIN ON** 
+- 连接查询
 
-Ø 外连接 **OUTER JOIN ON**
+```
+内连接 [INNER] JOIN ON
 
-² 左外连接 **LEFT [OUTER] JOIN**
+外连接 OUTER JOIN ON
+左外连接 LEFT [OUTER] JOIN
+右外连接 RIGHT [OUTER] JOIN
+全外连接（MySQL不支持）FULL JOIN
 
-² 右外连接 **RIGHT [OUTER] JOIN**
+自然连接 NATURAL JOIN
+```
 
-² 全外连接（MySQL不支持）FULL JOIN
-
-Ø 自然连接 **NATURAL JOIN**
-
-l 子查询
+- 子查询
 
  
 
@@ -1814,13 +1698,13 @@ l UNION：去重复记录，例如：SELECT * FROM t1 **UNION** SELECT * FROM t2
 
 l UNION ALL：不去重复记录，例如：SELECT * FROM t1 UNION ALL SELECT * FROM t2。
 
-\3.    要求：**被合并的两个结果：****column****数、column****类型必须相同。**
+\3.    要求：**被合并的两个结果：column数、column类型必须相同。**
 
 ![img](MySQL.assets/clip_image014-1601890181199.jpg)
 
 ![img](MySQL.assets/clip_image016-1601890181199.jpg)
 
-### 1.2　连接查询 （JOIN xxx ON xx=xx）
+### 2　连接查询
 
 查询的结果也是合并的结果集，连接查询就是求出多个表的乘积，例如t1连接t2，那么查询出的结果就是t1*t2。
 
@@ -1870,17 +1754,13 @@ l UNION ALL：不去重复记录，例如：SELECT * FROM t1 UNION ALL SELECT * 
 
  
 
- 
-
- 
-
- 
-
 **2.1**　**内连接**
 
-**上面的连接语句就是内连接，但它不是SQL****标准中的查询方式**，可以理解为方言！SQL标准的内连接为：
+**上面的连接语句就是内连接，但它不是SQL标准中的查询方式**，可以理解为方言！SQL标准的内连接为：
 
-  SELECT *   FROM emp e   INNER **JOIN**  dept d   ON e.deptno=d.deptno;  
+```
+SELECT * FROM emp e INNER JOIN dept d ON e.deptno=d.deptno;  
+```
 
 INNER可以省略，MySQL默认的连接方式就是内连接
 
@@ -1900,11 +1780,7 @@ INNER可以省略，MySQL默认的连接方式就是内连接
 
 OUTER可以省略
 
- 
 
- 
-
- 
 
 左连接是先查询出左表（即以左表为主），然后查询右表，右表中满足条件的显示出来，不满足条件的显示NULL。
 
@@ -1936,7 +1812,7 @@ OUTER可以省略
 
  
 
-**2.4****自然连接查询NATURAL JOIN**
+**2.4自然连接查询NATURAL JOIN**
 
 大家也都知道，连接查询会产生无用笛卡尔积，我们通常使用**主外键关系**等式来去除它。而自然连接无需你去给出主外键等式，它会自动找到这一等式：也就是不需要ON条件。
 
@@ -1945,10 +1821,6 @@ l 两张连接的表中名称和类型完全一致的列作为条件，例如emp
 当然自然连接还有其他的查找条件的方式，但其他方式都可能存在问题！
 
   SELECT * FROM emp NATURAL JOIN dept;  SELECT * FROM emp NATURAL LEFT JOIN dept;  SELECT * FROM emp NATURAL RIGHT JOIN  dept;  
-
- 
-
- 
 
  
 
@@ -1964,6 +1836,8 @@ l 子查询出现的位置：
 
 Ø from后，作表；
 
+> 子查询作为条件
+
 l 当子查询出现在where后作为条件时，还可以使用如下关键字：
 
 Ø any
@@ -1978,99 +1852,49 @@ l 子查询结果集的形式：
 
 Ø 多行单列（条件，表）
 
-Ø **多行多列（表）,****放在FROM****后面**
+Ø **多行多列（表）,放在FROM后面**
 
- 
 
- 
-
- 
-
- 
-
- 
-
- 
-
- 
 
 **练习：**
 
-**1.**    **工资高于JONES****的员工。**
+**1.**    **工资高于JONES的员工。**
 
-分析：
-
-查询条件：工资>JONES工资，其中JONES工资需要一条子查询。
-
- 
-
-第一步：查询JONES的工资
-
-  SELECT sal FROM emp WHERE ename='JONES'  
+```
+SELECT * FROM emp WHERE sal > (SELECT  sal FROM emp WHERE ename='JONES')  
+```
 
  
 
-第二步：查询高于甘宁工资的员工
+**2、查询与SCOTT同一个部门的员工。**
 
-  SELECT * FROM emp WHERE sal > (${第一步})  
-
- 
-
-结果：
-
-  SELECT * FROM emp WHERE sal > (SELECT  sal FROM emp WHERE ename='JONES')  
-
- 
-
-**2****、查询与SCOTT****同一个部门的员工。**
-
- 
-
+```
 SELECT * FROM emp WHERE deptno=(
-
 SELECT deptno FROM emp WHERE ename=’SCOTT’);
+```
 
  
 
-**3****、工资高于30****号部门所有人的员工信息**
-
- 
+**3、工资高于30号部门所有人的员工信息**
 
 第一种
 
-SELECT * FROM emp WHERE sal>(
-
-SELECT **MAX**(sal) FROM emp WHERE deptno=30);
+```
+SELECT * FROM emp WHERE sal > (SELECT MAX(sal) 
+FROM emp WHERE deptno=30;
+```
 
  
 
 第二种：
 
-第一步：查询30部门所有人工资
-
-  SELECT sal FROM emp WHERE deptno=30;  
-
- 
-
-第二步：查询高于30部门所有人工资的员工信息
-
-  SELECT * FROM emp WHERE sal > ALL (${第一步})  
+```
+SELECT * FROM emp WHERE sal > ALL (SELECT sal FROM emp WHERE deptno=30)  
+```
 
  
 
-结果：
-
-  SELECT * FROM emp WHERE sal > **ALL** (SELECT sal FROM emp WHERE deptno=30)  
-
- 
-
-l **子查询作为条件**
-
-l 子查询形式为多行单列（当子查询结果集形式为多行单列时可以使用**ALL**或**ANY**关键字）
-
- 
-
-**4****、查询工作和工资与MARTIN****（马丁）完全相同的员工信息**
+**4、查询工作和工资与MARTIN（马丁）完全相同的员工信息**
 
 第一步：查询出MARTIN的工作和工资
 
@@ -2090,9 +1914,9 @@ l 子查询形式为多行单列（当子查询结果集形式为多行单列时
 
  
 
-**5****、有2****个以上直接下属的员工信息**
+**5、有2个以上直接下属的员工信息**
 
- 
+
 
 SELECT * FROM emp WHERE empno IN(
 
@@ -2100,45 +1924,7 @@ SELECT mgr FROM emp **GROUP BY** mgr HAVING COUNT(mgr)>=2);
 
  
 
-**6****、查询员工编号为7788****的员工名称、员工工资、部门名称、部门地址**
-
- 
-
-查询列：员工名称、员工工资、部门名称、部门地址
-
-查询表：emp和dept，分析得出，不需要外连接（外连接的特性：某一行（或某些行）记录上会出现一半有值，一半为NULL值）
-
-条件：员工编号为**7788**
-
- 
-
- 
-
-| SELECT e.ename, e.sal, d.dname, d.loc   FROM emp e, dept d   WHERE e.deptno=d.deptno AND e.empno=**7788;  --****方言版，后面很多方言** |
-| ------------------------------------------------------------ |
-| SELECT e.ename, e.sal,d.dname,d.loc  FROM emp e JOIN dept  d  ON e.deptno=d.deptno AND e.empno=7788;   --标准版 |
-
- 
-
-**分析：无需子查询，但可以用子查询进行优化**
-
-第二步中的dept表表示所有行所有列的一张完整的表，这里可以优化，把dept替换成所有行、但只有dname和loc列的表，这需要子查询。
-
- 
-
-查询dept表中dname和loc，eptno，后面一个会作为条件，用来去除无用笛卡尔积。
-
-  SELECT dname,loc,deptno FROM dept;  
-
- 
-
-  SELECT e.ename, e.sal, d.dname, d.loc   FROM emp e, (SELECT dname,loc,deptno FROM  dept) d   WHERE e.deptno=d.deptno AND e.empno=**7788**  
-
- 
-
- 
-
-**3****、自连接:****自己连接自己，需要起别名区分**
+**3、自连接:自己连接自己，需要起别名区分**
 
 求7369员工编号、姓名、经理编号和经理姓名
 
@@ -2154,17 +1940,12 @@ SELECT mgr FROM emp **GROUP BY** mgr HAVING COUNT(mgr)>=2);
 
   **求各个部门薪水最高的员工所有信息**
 
-  Select  **e.\***  from emp e,
-
+```
+Select  e.*  from emp e,
 (select max(sal) maxsal,deptno from emp
-
 group by deptno) a
-
-where e.deptno = **a.deptno** AND e.sal =**a.maxsal;**
-
- 
-
- 
+where e.deptno = a.deptno AND e.sal =a.maxsal;
+```
 
  
 
@@ -2172,23 +1953,23 @@ where e.deptno = **a.deptno** AND e.sal =**a.maxsal;**
 
 # 事务的概念
 
-事务指逻辑上的一组操作，组成这组操作的各个单元，要么全部成功，要么全部不成功。数据库默认事务是自动提交的，也就是**发一条****sql****它就执行一条。**如果想多条sql放在一个事务中执行，则需要使用如下语句。
+事务指逻辑上的一组操作，组成这组操作的各个单元，要么全部成功，要么全部不成功。数据库默认事务是自动提交的，也就是**发一条sql它就执行一条。**如果想多条sql放在一个事务中执行，则需要使用如下语句。
 
 特点：
 
-**原子性（Atomicity****）**
+**原子性（Atomicity）**
 
 事务被视为不可分割的最小单元，事务的所有操作要么全部提交成功，要么全部失败回滚。
 
-**一致性（Consistency****）**
+**一致性（Consistency）**
 
 数据在既有定义的规则下是有效的。
 
-**隔离性（Isolation****）**
+**隔离性（Isolation）**
 
 一个事务所做的修改在最终**提交以前，**对其它事务是不可见的，**互不影响**。
 
-**持久性（Durability****）**
+**持久性（Durability）**
 
 一旦事务提交，则其所做的修改将会永远保存到数据库中。即使系统发生崩溃，**事务执行的结果**也不能丢失。可以通过数据库备份和恢复来保证持久性。
 
@@ -2208,23 +1989,17 @@ Rollback 回滚事务，撤销
 
  
 
- 
-
-**START TRANSACTION;--****开启事务**
+```
+START TRANSACTION;--开启事务
 
 DELETE FROM orderitems WHERE order_num = 20010；
-
 SAVEPOINT delete1;
-
 DELETE FROM orders WHERE order_num = 10010；
-
 ROLLBACK TO delete1;
-
 .......
-
 .......
-
-**COMMIT;--****提交**
+COMMIT;--提交
+```
 
  
 
@@ -2254,23 +2029,19 @@ ROLLBACK TO delete1;
 
 \4. 可串行化（SERIALIzABLE） 
 
-![img](MySQL.assets/clip_image031.png)
 
- 
 
-set transaction isolation level read uncommitted; 
-
-read committed;
-
-repeatable read;
-
-serializable;
+```mysql
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+-- read uncommitted
+-- read committed
+-- repeatable read
+-- serializable
 
 START TRANSACTION;
-
-........
-
+-- ...
 COMMIT;
+```
 
  
 
@@ -2326,9 +2097,9 @@ COMMIT;
 
 意向锁在原来的 X/S 锁之上引入了 IX/IS，IX/IS 都是**表锁**，用来表示一个事务想要在表中的某个数据行上加 X 锁或 S 锁。有以下两个规定：
 
-一个事务在获得某个数据行对象的 S 锁之前，必须先获得表的 IS 锁或者更强的锁；
+一个事务在获得某个数据行row对象的 S 锁之前，必须先获得表的 IS 锁或者更强的锁；
 
-一个事务在获得某个数据行对象的 X 锁之前，必须先获得表的 IX 锁。
+一个事务在获得某个数据行row对象的 X 锁之前，必须先获得表的 IX 锁。
 
 通过引入意向锁，事务 T 想要对表 A 加 X 锁，只需要先检测是否有其它事务对表 A 加了 X/IX/S/IS 锁，如果加了就表示有其它事务正在使用这个表或者表中某一行的锁，因此事务 T 加 X 锁失败。
 
@@ -2414,7 +2185,7 @@ InnoDB 的 MVCC 使用到的快照存储在 Undo 日志中，该日志通过回�
 
  
 
-***实现过程:\****以下实现过程针对可重复读隔离级别。*
+***实现过程:\以下实现过程针对可重复读隔离级别。*
 
 *1. SELECT*
 
@@ -2440,7 +2211,7 @@ InnoDB 的 MVCC 使用到的快照存储在 Undo 日志中，该日志通过回�
 
  
 
-**Next-Key Locks****：锁定索引**
+**Next-Key Locks：锁定索引**
 
 Next-Key Locks 是 MySQL 的 InnoDB 存储引擎的一种锁实现。MVCC 不能解决幻读的问题，Next-Key Locks 就是为了解决这个问题而存在的。在可重复读（REPEATABLE READ）隔离级别下，使用 MVCC + Next-Key Locks 可以解决幻读问题。
 
@@ -2486,132 +2257,6 @@ SELECT c FROM t WHERE c BETWEEN 10 and 20 FOR UPDATE;
 (50, 80]
 (80, ∞)
 ```
-
- 
-
- 
-
- 
-
-# left join、right join、inner join的区别
-
-left join(左联接) on返回包括左表中的所有记录和右表中联结字段相等的记录，以左表为基础
- right join(右联接) on返回包括右表中的所有记录和左表中联结字段相等的记录，以右表为基础
- inner join(等值连接) on只返回两个表中联结字段相等的行
-
- 
-
-**1.left join**
-
- 
-
-select * from A
-
-left join B 
-
-on A.aID = B.bID
-
- 
-
-结果如下:
-
-**aID**　　　　　**aNum**　　　　　**bID**　　　　　**bName**
-
-1　　　　　a20050111　　　　1　　　　　2006032401
-
-2　　　　　a20050112　　　　2　　　　　2006032402
-
-3　　　　　a20050113　　　　3　　　　　2006032403
-
-4　　　　　a20050114　　　　4　　　　　2006032404
-
-5　　　　　a20050115　　　　NULL　　　　　NULL
-
- 
-
- 
-
- 
-
-**2.right join**
-
- 
-
-select * from A
-
-right join B 
-
-on A.aID = B.bID
-
- 
-
-结果如下:
-
-aID　　　　　aNum　　　　　bID　　　　　bName
-
-1　　　　　a20050111　　　　1　　　　　2006032401
-
-2　　　　　a20050112　　　　2　　　　　2006032402
-
-3　　　　　a20050113　　　　3　　　　　2006032403
-
-4　　　　　a20050114　　　　4　　　　　2006032404
-
-NULL　　　　　NULL　　　　　8　　　　　2006032408
-
- 
-
- 
-
-**3.inner join**
-
-select * from A
-
-Inner join B 
-
-on A.aID = B.bID
-
- 
-
-结果如下:
-
-aID　　　　　aNum　　　　　bID　　　　　bName
-
-1　　　　　a20050111　　　　1　　　　　2006032401
-
-2　　　　　a20050112　　　　2　　　　　2006032402
-
-3　　　　　a20050113　　　　3　　　　　2006032403
-
-4　　　　　a20050114　　　　4　　　　　2006032404
-
- 
-
-结果说明:
-
-很明显,这里**显示出了** **A.aID = B.bID****的记录**.这说明inner join并不以谁为基础,它只显示符合条件的记录.
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2711,13 +2356,13 @@ MySQL 提供了两种相似的日期时间类型：DATETIME 和 TIMESTAMP
 
 \1. DATETIME
 
-能够保存从 1001 年到 9999 年的日期和时间，精度为秒，使用 8 字节的存储空间。
+能够保存从 1001 年到 9999 年的日期和时间，精度为秒，使用 **8 字节**的存储空间。
 
 它与时区无关。默认情况下，MySQL 以一种可排序的、无歧义的格式显示 DATETIME 值，例如“2008-01-16 22:37:08”，这是 ANSI 标准定义的日期和时间表示方法。
 
 \2. TIMESTAMP
 
-和 UNIX 时间戳相同，保存从 1970 年 1 月 1 日午夜（格林威治时间）以来的秒数，使用 4 个字节，只能表示从 1970 年 到 2038 年。它和时区有关，也就是说一个时间戳在不同的时区所代表的具体时间是不同的。
+和 UNIX 时间戳相同，保存从 1970 年 1 月 1 日午夜（格林威治时间）以来的秒数，使用 **4 个字节**，只能表示从 1970 年 到 2038 年。它和时区有关，也就是说一个时间戳在不同的时区所代表的具体时间是不同的。
 
 MySQL 提供了 FROM_UNIXTIME() 函数把 UNIX 时间戳转换为日期，并提供了 UNIX_TIMESTAMP() 函数把日期转换为 UNIX 时间戳。默认情况下，如果插入时没有指定 TIMESTAMP 列的值，会将这个值设置为当前时间。
 
@@ -2725,11 +2370,11 @@ MySQL 提供了 FROM_UNIXTIME() 函数把 UNIX 时间戳转换为日期，并提
 
  
 
- 
 
- 
 
 # MySQL的索引按结构分类
+
+> InnoDB中的索引
 
 **1. B+Tree** **索引**
 
@@ -2765,7 +2410,7 @@ InnoDB 引擎有一个特殊的功能叫“自适应哈希索引”，当某个�
 
  
 
--------------------------------------------------MyISAM------------------
+> MyISAM中的索引
 
 **3.** **全文索引**
 
@@ -2777,7 +2422,7 @@ InnoDB 存储引擎在 MySQL 5.6.4 版本中也开始支持全文索引。
 
  
 
-**4.** **空间数据索引（R-Tree****）**
+**4.** **空间数据索引（R-Tree）**
 
 MyISAM 存储引擎支持空间数据索引，可以用于地理数据存储。空间数据索引会从所有维度来索引数据，可以有效地使用任意维度来进行组合查询。
 
@@ -2804,38 +2449,6 @@ MyISAM 存储引擎支持空间数据索引，可以用于地理数据存储。�
 垂直切分是将一张表按列切分成多个表，通常是按照**列的关系密集**程度进行切分，也可以利用垂直切分将经常被使用的列和不经常被使用的列切分到不同的表中。
 
 在数据库的层面使用垂直切分将按数据库中表的密集程度部署到不同的库中。
-
- 
-
-Sharding 策略
-
-哈希取模：hash(key) % NUM_DB
-
-范围：可以是 ID 范围也可以是时间范围
-
-映射表：使用单独的一个数据库来存储映射关系
-
-Sharding 存在的问题及解决方案
-
-\1. 事务问题
-
-使用分布式事务来解决，比如 XA 接口。
-
- 
-
-\2. JOIN
-
-可以将原来的 JOIN 查询分解成多个单表查询，然后在用户程序中进行 JOIN。
-
- 
-
-\3. ID 唯一性
-
-使用全局唯一 ID：GUID。
-
-为每个分片指定一个 ID 范围。
-
-分布式 ID 生成器 (如 Twitter 的 Snowflake 算法)。
 
  
 
@@ -2902,7 +2515,7 @@ NoSQL(NoSQL = Not Only SQL )，意即"不仅仅是SQL"。
 
  
 
-**NoSQL****的优点/****缺点**
+**NoSQL的优点/缺点**
 
 | 优点                                         | 缺点                                                    |
 | -------------------------------------------- | ------------------------------------------------------- |
@@ -2932,9 +2545,7 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 
 NoSQL在不太影响性能的情况下，就可以方便地实现高可用的架构。比如Cassandra、HBase模型，通过复制模型也能实现高可用。
 
- 
 
- 
 
 **没有标准**
 
@@ -2992,9 +2603,9 @@ NoSQL优点：模式自由、支持简易复制、简单的API、最终的一致
 
  
 
-**2.2** **分布式存储的问题** **– CAP****理论**
+**2.2** **分布式存储的问题** **– CAP理论**
 
-如果我们期待实现一套严格满足ACID的分布式事务，很可能出现的情况就是系统的可用性和严格一致性发生冲突。在可用性和一致性之间永远无法存在一个两全其美的方案。由于NoSQL的基本需求就是支持分布式存储，严格一致性与可用性需要互相取舍，由此延伸出了CAP理论来定义分布式存储遇到的问题。CAP理论告诉我们：一个分布式系统不可能同时满足**一致性****(Consistency)****、可用性(Availability)****、分区容错性(Partitiontolerance)**这三个基本需求，并且最多只能满足其中的两项。
+如果我们期待实现一套严格满足ACID的分布式事务，很可能出现的情况就是系统的可用性和严格一致性发生冲突。在可用性和一致性之间永远无法存在一个两全其美的方案。由于NoSQL的基本需求就是支持分布式存储，严格一致性与可用性需要互相取舍，由此延伸出了CAP理论来定义分布式存储遇到的问题。CAP理论告诉我们：一个分布式系统不可能同时满足**一致性(Consistency)、可用性(Availability)、分区容错性(Partitiontolerance)**这三个基本需求，并且最多只能满足其中的两项。
 
 对于一个分布式系统来说，分区容错是基本需求，否则不能称之为分布式系统。因此架构师需要在C和A之间寻求平衡。
 
@@ -3022,7 +2633,7 @@ NoSQL优点：模式自由、支持简易复制、简单的API、最终的一致
 
 *P* *– Partition tolerance* *–* *分区容错性*
 
-分区容错性是指“the system continues to operate despite arbitrary message loss or failureof part of the system”，即分布式系统在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务。
+分区容错性是指“the system continues to operate despite arbitrary message loss or failure of part of the system”，即分布式系统在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务。
 
 分区容错性和扩展性紧密相关。在分布式应用中，可能因为一些分布式的原因导致系统无法正常运转。好的分区容错性要求能够使应用虽然是一个分布式系统，但看上去却好像是一个可以运转正常的整体。比如现在的分布式系统中有某一个或者几个机器宕掉了，其它剩下的机器还能够正常运转满足系统需求，或者是机器之间有网络异常，将分布式系统分隔成未独立的几个部分，各个部分还能维持分布式系统的运作，这样就具有好的分区容错性。
 
@@ -3034,25 +2645,25 @@ NoSQL优点：模式自由、支持简易复制、简单的API、最终的一致
 
  
 
-**3.1****一致性算法** **– Paxos**
+**3.1一致性算法** **– Paxos**
 
 Paxos 算法解决的问题是一个分布式系统如何就某个值（决议）达成一致。一个典型的场景是，在一个分布式数据库系统中，如果各节点的初始状态一致，每个节点执行相同的操作序列，那么他们最后能得到一个一致的状态。为保证每个节点执行相同的命令序列，需要在每一条指令上执行一个“一致性算法”以保证每个节点看到的指令一致。一个通用的一致性算法可以应用在许多场景中，是分布式计算中的重要问题。因此从20世纪80年代起对于一致性算法的研究就没有停止过。**节点通信**存在两种模型：共享内存（Shared memory）和消息传递（Messages passing）。Paxos 算法就是一种基于消息传递模型的一致性算法。
 
  
 
-**3.2****分区（Partitioning****）**
+**3.2分区（Partitioning）**
 
 原来所有的数据都是在一个数据库上的，网络IO及文件IO都集中在一个数据库上的，因此CPU、内存、文件IO、网络IO都可能会成为系统瓶颈。而分区的方案就是把某一个表或某几个相关的表的数据放在一个独立的数据库上，这样就可以把CPU、内存、文件IO、网络IO分解到多个机器中，从而提升系统处理能力。主从模式，用于做读写分离；
 
  
 
-**3.3****分片（Replication****）**
+**3.3分片（Replication）**
 
 分区有两种模式，一种是主从模式，用于做读写分离；另外一种模式是分片模式，也就是说把一个表中的数据分解到多个表中。一个分区只能是其中的一种模式。
 
  
 
-**3.4****一致性哈希（Consistent Hashing****）**
+**3.4一致性哈希（Consistent Hashing）**
 
 一致性哈希算法是分布式系统中常用的算法。比如，一个分布式的存储系统，要将数据存储到具体的节点上，如果采用普通的hash方法，将数据映射到具体的节点上，如key%N，key是数据的key，N是机器节点数，如果有一个机器加入或退出这个集群，则所有的数据映射都无效了，如果是持久化存储则要做数据迁移，如果是分布式缓存，则其他缓存就失效了。
 
@@ -3129,7 +2740,7 @@ NoSQL优秀应用实例1. 新浪微博 - Redis
 
 ***NewSQL\***
 
-  是对各种新的可扩展/高性能数据库的简称。具有**NoSQL****对海量数据**的存储管理能力，保持了**传统数据库**支持ACID和SQL等特性。
+  是对各种新的可扩展/高性能数据库的简称。具有**NoSQL对海量数据**的存储管理能力，保持了**传统数据库**支持ACID和SQL等特性。
 
 NewSQL共同特点：支持关系数据模型；使用SQL作为其主要的接口。
 
@@ -3171,11 +2782,7 @@ NewSQL共同特点：支持关系数据模型；使用SQL作为其主要的接�
 
  
 
- 
 
- 
-
- 
 
 # SQL查询优化
 
@@ -3254,21 +2861,17 @@ COUNT(*): 16049
 
 ![img](MySQL.assets/clip_image026.jpg)
 
-**结果说明**
 
- 
 
-**a.**     **id**
+-  id
 
 SELECT识别符。这是SELECT查询序列号。这个不重要。
 
- 
 
-**b.**    **select_type**
+
+- select_type
 
 表示SELECT语句的类型。
-
- 
 
 有以下几种值：
 
@@ -3301,21 +2904,11 @@ SELECT识别符。这是SELECT查询序列号。这个不重要。
 
  
 
- 
-
-**c.**     **table**
-
-表示查询的对象表。
-
- 
-
-**d.**    **type****（重要）**
+- type（重要）
 
 表示表的连接类型。
 
 以下的连接类型的顺序是从最佳类型到最差类型：
-
- 
 
 1、 system
  表仅有一行，这是const类型的特列，平时不会出现，这个也可以忽略不计。
@@ -3464,7 +3057,7 @@ MySQL从4.1版本开始支持子查询，使用子查询进行SELECT语句嵌套
 
  
 
-**使用LIKE****关键字的模糊查询时**
+**使用LIKE关键字的模糊查询时**
 
 在使用LIKE关键字进行查询的查询语句中，如果匹配字符串的第一个字符为“%”，索引不起作用。只有“%”不在第一个位置，索引才会生效。
 
@@ -3500,7 +3093,7 @@ MySQL可以为多个字段创建索引，一个索引可以包括16个字段。�
 
  
 
-**使用OR****关键字的查询**
+**使用OR关键字的查询**
 
 查询语句的查询条件中只有OR关键字，且OR前后的两个条件中的列都是索引时，索引才会生效，否则，索引不生效。
 
