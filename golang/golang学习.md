@@ -29,11 +29,7 @@ PATH，golang可执行文件目录（%GOROOT/bin/，/go/bin/）
 - 标识符identifier、关键字keyword、操作符operator
 - 字面量literal
 
-|
 
-- 数组array，切片slice。对数组的包装，切片值相当于对底层某个数组的引用：指向数组元素的指针、切片长度、容量；
-
-|
 
 - 闭包（closure）：引用了外部变量的匿名函数。
 
@@ -158,127 +154,7 @@ golang中string底层是通过byte，是ASCII字符编码
 
 
 
-# 环境配置
-
-## 1.Linux安装
-
-**Go**
-
  
-
-Golang官网下载地址：[**https://golang.org/dl/**](https://golang.org/dl/)
-
-复制对应版本链接
-
-Cd下载目录，使用wget下载压缩包
-
-`wget https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz`
-
-执行tar解压到/usr/loacl目录下，得到go文件夹
-
-`tar -C  /usr/local  -zxvf  go1.10.3.linux-amd64.tar.gz`
-
-
-
-```shell
-export GOROOT=/usr/local/go
-export PATH=$PATH:$GOROOT/bin
-
-//或者一步完成
-export path=$path:/usr/local/go/bin
-```
-
- 
-
-查看环境变量
-
-go env
-
-go version  查看版本号
-
-
-
- **sublime**
-
-Sublime官网查看最新版本链接 <http://www.sublimetext.com/3>
-
-```shell
-~$  wget  https://download.sublimetext.com/sublime_text_3_build_3176_x64.tar.bz2
-
-~$  tar -xvvf  sublime_text_3_build_3176_x64.tar.bz2
-
-//移动解压目录到opt/
-~$  sudo mv sublime_text_3  /opt/     
-//创建应用链接
-~$	sudo ln  -s  /opt/sublime_text_3/sublime_text  /usr/bin/sublime
-```
-
-
-
-安装package control
-
-View > Show Console 粘贴package安装python脚本
-
- 
-
-手动安装：下安装包
-
-
-
-## 1.Windows
-
-**go**
-
-安装msi文件
-
-
-
-## 2.配置sublime text
-
-1 **Golang build**
-
- `package control - install - Golang build`
-
-配置path和Gopath工作路径：`Preferences Preferences > Package Setting > Golang Config > Setting - User`
-
-```json
-{
-    "PATH": "C:\\Go\\bin",        // go编译器安装路径
-    "GOPATH": "E:\\GoProjects\\go_study"   // 项目路径
-}
-```
-
-
-
-//GoSublime没有弄成功
-
-2 **GoSublime**
-
-下载GoSublime到Sublime Text *Packages* directory：
-
-在packages下打开控制台
-
-`git  clone  https://margo.sh/GoSublime`下载并自动解压
-
- 
-
-重启sublime，
-
-配置"use_gs_gopath": true ,默认是false，// if set, whenever possible `GOPATH` will be set to `GS_GOPATH`.
-
- 
-
-tools/build with选择GoSublime即可
-
- 
-
-
-
-
-
-
-
-
 
 # 基础知识
 
@@ -314,10 +190,6 @@ reflect.Value
   
   ```
 ```
-  
-
-
-
 ## 类型、变量
 
 - 强制类型转换
@@ -407,11 +279,12 @@ func main() {
 append()  copy()
 
 ```go
-var ipv4 [4]uint8 = [4]uint8{192, 168, 0, 2} // 指定容量
+var ipv4 [4]uint8 = [4]uint8{192, 168, 0, 2} // 数组
 var ips = []string{"192.168.0.1", "192.168.0.2"} //声明并初始化切片
 ips = append(ips, "192.168.0.3") //为切片操作，一定要赋值回去
 
-ips = make([]string 100)
+ips = make([]string, 100) // 预分配100个值，len(ips)==100, 可以直接0~99寻址访问
+ips = []string{} // len(ips)==0，不能通过下标直接访问
 
 //删除切片中的元素seq[index]
 seq = append(seq[:index], seq[index+1:]...) //...表示将切片所有的元素整个添加在前一个后面

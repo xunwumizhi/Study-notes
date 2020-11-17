@@ -5,16 +5,14 @@ public class TreeNode {
   int val = 0;
   TreeNode left = null;
   TreeNode right = null;
-```
-
- 
-
-```
+  
   public TreeNode(int val) {
     this.val = val;
   }
 }
 ```
+
+ 
 
  
 
@@ -206,52 +204,49 @@ public class TreeNode {
 请实现一个函数按照之字形打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右至左的顺序打印，第三行按照从左到右的顺序打印，其他行以此类推。
 
 ```
-**import `java.util.ArrayList;
-**import `java.util.Stack;
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class Solution {
+public ArrayList<ArrayList<Integer> > Print(TreeNode pRoot) {
+    	ArrayList<ArrayList<Integer>> list = new ArrayList<ArrayList<Integer>>();
+    	if(pRoot==null) return list;
+    	
+    	Stack<TreeNode> s1 = new Stack<TreeNode>(); 
+    	Stack<TreeNode> s2 = new Stack<TreeNode>(); 
+    	
+    	s1.push(pRoot);
+    	while(!s1.isEmpty() || !s2.isEmpty()){
+    		ArrayList<Integer> temp1 = new ArrayList<Integer>();
+    		while(!s1.isEmpty()){
+    			TreeNode peek = s1.pop();
+    			temp1.add(peek.val);
+    			if(peek.left!=null)
+    				s2.add(peek.left);
+    			if(peek.right!=null)
+    				s2.add(peek.right);    			
+    		}
+    		list.add(temp1);
+    		
+    		ArrayList<Integer> temp2 = new ArrayList<Integer>();
+    		while(!s2.isEmpty()){
+    			TreeNode peek = s2.pop();
+    			temp2.add(peek.val);
+    			if(peek.right!=null)
+    				s1.add(peek.right);    			
+    			if(peek.left!=null)
+    				s1.add(peek.left);
+    		}
+    		if(!temp2.isEmpty())
+                list.add(temp2);
+    	}
+    	    	
+    	return list;
+    }
+}
 ```
 
  
-
-```
-**public class `Solution {
-**public `ArrayList<ArrayList<Integer> > Print(TreeNode pRoot) {
-    ArrayList<ArrayList<Integer>> list =` new `ArrayList<ArrayList<Integer>>();
-    if(pRoot==null)` return `list;
-    
-**//**奇数行放入栈s1，偶数行放入S2**
-    Stack<TreeNode> s1 =` new `Stack<TreeNode>();
-    Stack<TreeNode> s2 =` new `Stack<TreeNode>();
-    
-    s1.push(pRoot);
-    while(!s1.isEmpty() || !s2.isEmpty()){
-      ArrayList<Integer> temp1 =` new `ArrayList<Integer>();
-      while(!s1.isEmpty()){
-        TreeNode peek = s1.pop();
-        temp1.add(peek.val);
-        if(peek.left!=null)
-          s2.add(peek.left);
-        if(peek.right!=null)
-          s2.add(peek.right);      
-      }
-      list.add(temp1);
-      
-      ArrayList<Integer> temp2 =` new `ArrayList<Integer>();
-      while(!s2.isEmpty()){
-        TreeNode peek = s2.pop();
-        temp2.add(peek.val);
-        if(peek.right!=null)
-          s1.add(peek.right);      
-        if(peek.left!=null)
-          s1.add(peek.left);
-      }
-      if(!temp2.isEmpty())
-        list.add(temp2);
-    }
-        
-    return `list;
-  }
-}
-```
 
  
 
@@ -645,38 +640,36 @@ public class Solution {
 
  
 
-# 栈
+# 栈、队列
 
 ## 栈的压入、弹出序列
 
 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，序列4，5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
 
-```
-**import `java.util.ArrayList;
-**import `java.util.Stack;
-```
 
- 
 
 ```
-**public class `Solution {
-  public boolean `IsPopOrder(int `[] pushA,int `[] popA) {
-    Stack<Integer> stack =` new `Stack<Integer>();
-    int `cursor =` `0;
-    for(int `i=0;i<pushA.length;i++){
-      if(pushA[i]==popA[cursor]){
-        cursor++;
-        continue;
-      }
-      stack.push(pushA[i]);
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class Solution {
+    public boolean IsPopOrder(int [] pushA,int [] popA) {
+        Stack<Integer> stack = new Stack<Integer>();
+        int cursor = 0;
+        for(int i=0;i<pushA.length;i++){
+            if(pushA[i]==popA[cursor]){
+                cursor++;
+                continue;
+            }
+            stack.push(pushA[i]);
+        }
+        while(!stack.empty()){
+            if(stack.pop()!=popA[cursor]) return false;
+            cursor++;
+        }
+        return true;
+        
     }
-    while(!stack.empty()){
-      if(stack.pop()!=popA[cursor])` return false;
-      cursor++;
-    }
-    return true;
-    
-  }
 }
 ```
 
@@ -684,46 +677,40 @@ public class Solution {
 
 定义栈的数据结构，请在该类型中实现一个能够得到栈最小元素的min函数。
 
-```
-**import `java.util.Stack;
-```
 
- 
 
 ```
-**public class `Solution {
-```
+import java.util.Stack;
 
- 
+public class Solution {
 
-```
-  Stack<Integer> stack =` new `Stack<Integer>();
-  Stack<Integer> minTable =` new `Stack<Integer>();
-  public void `push(int `node) {
-    stack.push(node);
+    Stack<Integer> stack = new Stack<Integer>();
+    Stack<Integer> minTable = new Stack<Integer>();
+    public void push(int node) {
+        stack.push(node);
+        
+        if(!minTable.empty()){
+            int nextMin = minTable.peek();
+            nextMin = node < nextMin ? node:nextMin;
+            minTable.push(nextMin);
+        }else minTable.push(node);
+        
+    }
     
-    if(!minTable.empty()){
-      int `nextMin = minTable.peek();
-      nextMin = node < nextMin ? node:nextMin;
-      minTable.push(nextMin);
-    }else `minTable.push(node);
+    public void pop() {
+        if(stack.empty()) return;
+        stack.pop();
+        minTable.pop();
+    }
     
-  }
-  
-  public void `pop() {
-    if(stack.empty())` return;
-    stack.pop();
-    minTable.pop();
-  }
-  
-  public int `top() {
-    if(stack.empty())` return `0;
-    return `stack.peek();
-  }
-  
-  public int `min() {
-    return `minTable.peek();
-  }
+    public int top() {
+        if(stack.empty()) return 0;
+        return stack.peek();
+    }
+    
+    public int min() {
+        return minTable.peek();
+    }
 }
 ```
 
@@ -739,31 +726,29 @@ public class Solution {
 
 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
 
-```
-**import `java.util.Stack;
-```
 
+
+```
+import java.util.Stack;
  
-
-```
-**public class `Solution {
-  Stack<Integer> in =` new `Stack<Integer>();
-  Stack<Integer> out =` new `Stack<Integer>();
-  
-  public void `push(int `node) {
-    in.push(node);
-  }
-  
-  public int `pop() {
-    //if(stack1.empty() && stack2.empty())
-      //throw new RuntimeExpection("空队列不支持删除！");
-    if(out.empty()){
-      while(!in.empty()){
-        out.push(in.pop());
-      }
+public class Solution {
+    Stack<Integer> in = new Stack<Integer>();
+    Stack<Integer> out = new Stack<Integer>();
+     
+    public void push(int node) {
+        in.push(node);
     }
-    return `out.pop();
-  }
+     
+    public int pop() {
+        //if(stack1.empty() && stack2.empty())
+            //throw new RuntimeExpection("空队列不支持删除！");
+        if(out.empty()){
+            while(!in.empty()){
+                out.push(in.pop());
+            }
+        }
+        return out.pop();
+    }
 }
 ```
 
