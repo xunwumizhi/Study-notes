@@ -1,19 +1,6 @@
 # 备忘录
 
-map,slice,值类型，引用类型？
-
-值拷贝，深拷贝
-
-方法接受者：值类型与指针类型
-
-默认的string等方法
-
 反射
-
-
-
-
-
 
 
 # 常用
@@ -93,27 +80,6 @@ fmt.Sprintf("%02d", int(dt.Month()))  //零填充
 x.Print("", v, "end\n") // 自动调用v.String()进行字符串拼接
 x.Println("", v, "end")
 ```
-
-```go
-// 日志
-debugLog := log.New(os.Stdout, "", log.LstdFlags|log.Lshortfile)
-debugLog.Println("A debug message here")
-
-debugLog.SetPrefix("[Info]")
-debugLog.Println("A Info Message here ")
-
-debugLog.SetFlags(log.LstdFlags)
-debugLog.Println("A different prefix")
-
-// 错误日志
-debugLog = log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-debugLog.Println("A err message here")
-```
-
-
-
-
-
 
 
 ## 包管理
@@ -1916,7 +1882,7 @@ regexp.MustCompile(`New size: (.*);`).FindStringSubmatch(testStr)
 
 # pprof
 
-```
+```go
 "net/http"
 _ "net/http/pprof"
 
@@ -1929,7 +1895,7 @@ go func(){
 
 // 浏览器查看并下载文件
 
-```
+```bash
 go tool pprof -h
 go tool pprof -http :1234 http://url/pprof/heap
 ```
