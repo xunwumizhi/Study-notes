@@ -137,6 +137,30 @@ git reset --hard <commit>
 
 # Linux
 
+## comprehensive
+```bash
+top # https://juejin.cn/post/6844903919588491278
+
+
+# 一次移动多个
+mv SOURCE... -t DIRECTORY
+
+
+tar -xzvf <input.tar.gz>
+tar -czvf <output.tar.gz> <inputfile>...
+# -x --extract, -c --create, -z --gzip... , -v --verbose, -f --file
+
+uniq | wc -l
+tail -n 5 # tail 默认展示后10行
+head -n 20 text.txt |tail -n 10 # 第11~20行
+cat text.txt |wc -l
+tailf <log-file> # tail -f <log-file>
+
+lsof |grep delete
+which python
+whereis python
+
+```
 
 ## memory-storage
 
@@ -154,6 +178,12 @@ du -hs *
 du -h -d 1
 # 所有文件，不只是目录
 du -ha									
+
+```
+
+## file-system
+```bash
+sudo ls -al /proc/22686/fd
 
 ```
 
@@ -193,6 +223,11 @@ mount
 
 ## systemctl
 ```bash
+init 3
+
+nc -l 9191 < kubectl
+nc <server-ip> 9191 > kubectl
+
 systemctl status [service]
 supervisorctl status [service]
 
@@ -215,34 +250,6 @@ cat all_pods_list | grep -wf pods.txt | awk '{print $1,$2}' | while read x;do ku
 cat all_pods_list | grep -wf pods.txt | awk '{print "kubectl get pods -n",$1,$2}' | xargs -P 5 -I {} bash -c {}
 ```
 
-
-## fragment
-```bash
-# 一次移动多个
-mv SOURCE... -t DIRECTORY
-# -x --extract, -c --create, --z --gzip... , -v --verbose, -f --file
-
-tar -xzvf <input.tar.gz>
-tar -czvf <output.tar.gz> <inputfile>...
-
-
-uniq | wc -l
-tail -n 5 # tail 默认展示后10行
-head -n 20 text.txt |tail -n 10 # 第11~20行
-cat text.txt |wc -l
-tailf <log-file> # tail -f <log-file>
-
-lsof |grep delete
-which python
-whereis python
-```
-
-```bash
-init 3
-
-nc -l 9191 < kubectl
-nc <server-ip> 9191 > kubectl
-```
 
 # nginx
 
