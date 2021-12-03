@@ -132,7 +132,13 @@ git revert <commit> -m 1
 
 git reflog
 git reset <commit>
+git reset master -- ./    # 当前目录下文件回滚到master
 git reset --hard <commit>
+
+git checkout master -- ./  # checkout当前目录文件至master，但不会删除新增文件
+
+git clean --help
+git clean -ndf    # 手动删除文件
 ```
 
 # Linux
@@ -185,6 +191,7 @@ du -ha
 ```bash
 sudo ls -al /proc/22686/fd
 
+find . -name "*.c"
 ```
 
 ## process
