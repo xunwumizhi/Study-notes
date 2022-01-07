@@ -63,7 +63,7 @@ substring_index以分隔符截取子串，index为正，截取从头往后数到
 
 # 显示变量
 
-```mysql
+```sql
 SHOW VARIABLES LIKE '%time_zone%';
 SELECT NOW();
 
@@ -99,6 +99,61 @@ ALTER TABLE users2 ADD INDEX userName_password(userName,password);
 
 ```
 
+# 事务
+
+```sql
+-- 开启事务
+START TRANSACTION;
+BEGIN;
+
+--
+COMMIT;
+--
+ROLLBACK;
+```
+
+## select for update
+两个事务同时进行中，双方使用 `SELELT FOR UPDATE` 会互斥;
+
+未获取到锁的一方，select 就会失败，更别说 Update 了；
+
+TX A：select for udpate;
+TX B：使用普通select会成功，然后update被阻塞，A提交后，B update开始执行，此时B提交后，会成功，此时A的提交被覆盖；
+
+如果双方修改同一记录，都需要使用 SELECT FOR UPDATE，保证B看到的记录是A提交后新数据。
+
+
+## MVCC
+
+查询SELECT: 使用是一致性读consistent read：
+
+更新UPDATE: 使用当前读current read，即只能最新版本上更新；
+
+如果让SELECT读到最新版本数据，实现current read，可以加锁实现
+读锁(S锁共享锁)或者写锁(X锁排他锁)
+```sql
+select ... lock in share mode;
+select ... for update;
+```
+
+- 一致性读
+
+InnoDB为每个事务构造一个 trx_id 数组，保存TX启动瞬间正在活跃的ID（启动未提交），利用这个活跃 TX数组 和DB里面 trx_id 最大值+1 组成
+一致性读视图，即 consistent read view，规定能看到哪些数据
+
+版本trx_id未提交，不可见；
+
+版本trx_id已提交，但是是在视图创建后提交的，不可见；
+
+版本trx_id已提交，而且是在视图创建前提交的，可见。
+
+- 读提交RC 和 可重复读RR
+
+而读提交的逻辑和可重复读的逻辑类似，它们最主要的区别是：
+
+在可重复读RR隔离级别下，只需要在事务开始的时候创建一致性视图，之后事务里的其他查询都共用这个一致性视图；
+
+在读提交RC隔离级别下，每一个语句执行前都会重新算出一个新的视图。
 
 
 # 命令
@@ -116,7 +171,7 @@ desc <table_name>;
 
 
 
-```mysql
+```sql
 SELECT id, name, gender, score
 FROM students
 ORDER BY score DESC
@@ -152,24 +207,6 @@ LIMIT 3 OFFSET 0;
 
 
 # 基本概念
-
-DBMS 数据库管理系统
-
- 
-
-Column 列，表由列组成； row行，一行表示一条记录（实体）
-
- 
-
-函数，SQL利用函数处理数据
-
- 
-
-JDBC连接数据库：jdbc:mysql://localhost:3306/productStore
-
-![img](MySQL.assets/clip_image002-1601890181198.jpg)
-
- 
 
 ## 引擎
 
@@ -216,10 +253,6 @@ MyISAM强调了**快速读取操作**，主要用于**高负载的select，这�
 **支持事务但不支持全文本搜索
 **     该存储引擎为MySQL表提供了ACID事务支持、系统崩溃修复能力和多版本并发控制（即MVCC Multi-Version Concurrency Control）的行级锁；该引擎支持自增长（auto_increment）,自增长列的值不能为空，如果在使用的时候为空则自动从现有值开始增值，如果有但是比现在的还大，则直接保存这个值; 该引擎存储引擎支持外键（foreign key） ,外键所在的表称为子表而所依赖的表称为父表。InnoDB引擎在5.5后的MySQL数据库中为默认存储引擎。即MySQL5.5后默认支持事务。
 
- 
-
- 
-
 ## 视图
 
 视图是虚拟的表。视图只包含使用时动态检索数据的查询SELECT。（可以理解为SQL语句的包装），视图是预先建立的查询语句,用起来就像使用表一样了
@@ -227,8 +260,6 @@ MyISAM强调了**快速读取操作**，主要用于**高负载的select，这�
 优势：简化复杂的SQL语句；使用表的组成部分；
 
 保护数据，可以给用户授予表的特定部分的访问权限
-
- 
 
 ```
 CREATE VIEW myfirstView AS
@@ -240,21 +271,18 @@ ON e.deptno=d.deptno;
 将上面查询语句包装成一个虚拟表，只是可以查询出结果集的SQL，并不是真正的表，使用时可以看做一张表。
 
 使用视图：
-
+```sql
 SELECT xxx
-
 FROM myfirstView
-
 WHERE xxxxx
-
- 
+```
 
 ## 存储过程
 
 存储过程是预先写好并编译好的SQL程序。
  存储过程和函数区别：函数是预先写好的代码片断,有系统函数,也有自定义函数。
 
-```
+```sql
 CREATE PROCEDURE xxxxx()
 BEGIN
 xxxx
@@ -1527,7 +1555,7 @@ name varchar(50)
 
 第二种添加方式：此种方式优势在于，可以创建联合主键
 
-```mysql
+```sql
 CREATE TABLE student(
 id int,
 name varchar(50),
@@ -2031,7 +2059,7 @@ COMMIT;--提交
 
 
 
-```mysql
+```sql
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 -- read uncommitted
 -- read committed
