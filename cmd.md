@@ -117,6 +117,9 @@ git commit --amend -m "add new file"
 git stash
 git stash list
 git stash pop
+git stash drop stash@{0}
+git stash clear # 清除所有
+
 
 git push -f
 git rebase <commit>
