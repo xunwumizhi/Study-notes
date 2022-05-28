@@ -13,8 +13,8 @@
 # 光标移动
 j # 下一行
 k # 上一行
-w # 向前移动一个单词（光标停在单词首部）
-b # 向后移动一个单词
+w # 向尾部移动一个单词（光标停在单词首部）
+b # 向头部移动一个单词
 gg # 光标移动到首行
 G  # 尾行
 
@@ -140,20 +140,28 @@ git reset --hard <commit>
 
 git checkout master -- ./  # checkout当前目录文件至master，但不会删除新增文件
 
+# U untracked file, 新增文件为Untracked状态，这时git clean等于 Linux rm 文件效果
 git clean --help
 git clean -ndf    # 手动删除文件
+
+# tracked file, 对已有文件操作，等于 Linux rm 后再 git add
+git rm -rf ${file}
+```
+
+## submodule
+
+git clone下来的工程中带有submodule时，初始的时候，submodule的内容并不会自动下载下来的，此时，只需执行如下命令：
+```bash
+git submodule init
+git submodule update
+# 等价于
+git submodule update --init --recursive
 ```
 
 # Linux
 
-## comprehensive
+## tar |uniq |whereis |mv |find |ls
 ```bash
-top # https://juejin.cn/post/6844903919588491278
-
-
-# 一次移动多个
-mv SOURCE... -t DIRECTORY
-
 
 tar -xzvf <input.tar.gz>
 tar -czvf <output.tar.gz> <inputfile>...
@@ -169,11 +177,24 @@ lsof |grep delete
 which python
 whereis python
 
+# 一次移动多个
+mv SOURCE... -t DIRECTORY
+
+find . -name "*.c"
+
+sudo ls -al /proc/22686/fd
+ls -alhr ./
 ```
 
-## memory-storage
+
+## top | free | df | du
 
 ```bash
+# 10分钟教会你看懂top - 掘金: https://juejin.cn/post/6844903919588491278
+
+# Linux top命令的用法详细详解 - 莫水千流 - 博客园: https://www.cnblogs.com/zhoug2020/p/6336453.html
+top
+
 # 内存
 free -h
 
@@ -190,29 +211,36 @@ du -ha
 
 ```
 
-## file-system
+
+## ping | telnet | netstat | tcpdump
 ```bash
-sudo ls -al /proc/22686/fd
-
-find . -name "*.c"
-```
-
-## process
-
-
-## network
-```bash
-curl -i -H "Content-Type: application/json" -X POST -d '{""}' "<URL>"
-
 ping <ip>
 
 telnet <ip> <port>
 
 netstat -lntp # ss -ltp
+
+tcpdump -i eth0 -nn -s0 -v port 80
+# -i : 选择要捕获的接口，通常是以太网卡或无线网卡，也可以是 vlan 或其他特殊接口。如果该系统上只有一个网络接口，则无需指定。
+# -nn : 单个 n 表示不解析域名，直接显示 IP；两个 n 表示不解析域名和端口。这样不仅方便查看 IP 和端口号，而且在抓取大量数据时非常高效，因为域名解析会降低抓取速度。
+# -s0 : tcpdump 默认只会截取前 96 字节的内容，要想截取所有的报文内容，可以使用 -s number， number 就是你要截取的报文字节数，如果是 0 的话，表示截取报文全部内容。
+# -v : 使用 -v，-vv 和 -vvv 来显示更多的详细信息，通常会显示更多与特定协议相关的信息。
+# port 80 : 这是一个常见的端口过滤器，表示仅抓取 80 端口上的流量，通常是 HTTP。
+```
+
+## curl | wget
+
+```bash
+# curl 网络请求
+curl -i -H "Content-Type: application/json" -X POST -d '{""}' "<URL>"
+
+# 下载并重命名
+wget -O <localPath> <remoteUrl>
+curl -o <localPath> <remoteUrl>
 ```
 
 
-## user
+## passwd | group
 ```bash
 # 查看用户
 cat /etc/passwd  
@@ -225,13 +253,13 @@ cat /etc/group
 # segroup:x:1001:zhangsan,lisi,wangwu
 ```
 
-## device
+## mount
 
 ```bash
 mount
 ```
 
-## systemctl
+## nc |nohup |journalctl
 ```bash
 init 3
 
@@ -254,10 +282,40 @@ while read -r line; do echo $line; done < /tmp/.kubetmp
 ## grep | awk | sed
 
 ```bash
-grep "key" <file> |awk -F '=' '{print $2}'  # sed -E "s#key=\"(.*)\"#\1#g"
+# grep 提取字符串
+echo office365 | grep -P '\d+' -o
+find . -name "*.txt" | xargs grep -P 'regex' -o
+
+
+
+
+# awk
+grep "key" <file> |awk -F '=' '{print $2}'  
+
+# 获取key的值
+# sed 正则提取字符串，用单引号'可用转义字符
+echo here365test | sed 's/.*ere\([0-9]*\).*/\1/g'
+# 使用双引号，要显示 -E 使用正则
+sed -E "s#key=\"(.*)\"#\1#g"
+echo '{"code":46015,"msg":"bad request"}' |sed -E "s/.*code\":([0-9]*).*/\1/g"
+# 单引号写法
+echo '{"code":46015,"msg":"bad request"}' |sed 's/.*code":\([0-9]*\).*/\1/g'
+# sed 使用变量、替换变量
+pattern1=XXX
+pattern2=XXX 
+sed -i "s/$pattern1/$pattern2/g" inputfile
+
+
+grep -C 3 <content> # 上下几行
+grep -r "" /data
 
 cat all_pods_list | grep -wf pods.txt | awk '{print $1,$2}' | while read x;do kubectl get pods -n $x; done
 cat all_pods_list | grep -wf pods.txt | awk '{print "kubectl get pods -n",$1,$2}' | xargs -P 5 -I {} bash -c {}
+```
+
+## scp
+```
+scp "/data/karlkang/kg_contest_tool/download/top100_$actid.csv" "user_00@9.146.222.202:/cfs/cm3/upload/kg_contest_data_tool"
 ```
 
 
@@ -267,6 +325,21 @@ cat all_pods_list | grep -wf pods.txt | awk '{print "kubectl get pods -n",$1,$2}
 nginx -g 'daemon off;'
 nginx -s reload
 nginx -s quit
+```
+
+```conf
+http {
+  ...
+  server: {
+    # 配置下载
+        location /download {
+            alias D:\\download;
+            autoindex on;
+            autoindex_exact_size off;
+        }
+  }
+  ...
+}
 ```
 
 

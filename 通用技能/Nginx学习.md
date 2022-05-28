@@ -1,3 +1,12 @@
+# 概念
+
+## 正向代理与反向代理
+
+正向代理，client的替身向server发起请求；
+
+反向代理，可以理解为服务器网关，是server的替身，client向替身——反向代理服务器(如Nginx)发起请求
+
+
 # nginx.conf 配置文件
 
 四个重要的设置：全局main、主机server、上游服务器upstream、location

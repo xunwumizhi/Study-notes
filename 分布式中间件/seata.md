@@ -1,0 +1,7 @@
+# 分布式事务
+
+## 两阶段提交 2-phase commit, 2PC
+
+prepare 阶段和 commit 阶段
+
+![](https://static001.geekbang.org/resource/image/eb/c4/eb979df60ca9a2d2bb811febbe4545c4.png)
