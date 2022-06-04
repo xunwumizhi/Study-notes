@@ -1,4 +1,21 @@
+# basic
+
 ```bash
+# 清理文件
+for i in $(find ./ -name '*.log'); do > $i; done
+
+# 查找根目录下大于500M的文件，排除/proc目录
+find / ! -path "/proc/*" -type f -size +500M | sort -rh|xargs ls -lh | awk '{ print $9 ": " $5 }'
+
+# 如果排除俩个目录
+find / ! -path "/proc/*" ! -path "/home/*" -type f -size +500M | sort -rh|xargs ls -lh | awk '{ print $9 ": " $5 }'
+
+# [a|c|m]min    [最后访问|最后状态修改|最后内容修改]min 单位分钟
+# [a|c|m]time    [最后访问|最后状态修改|最后内容修改]time 单位小时
+find ./ -type f -mtime 0  #查找一天内修改的文件
+find ./ -type f -mtime -2 #查找2天内修改的文件，多了一个减号
+find ./ -type f -mtime +2 #查找2天前修改的文件，多了一个减号
+
 # 执行字符串命令
 cmd="date"
 $cmd

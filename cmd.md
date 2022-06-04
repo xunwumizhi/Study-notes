@@ -318,31 +318,6 @@ cat all_pods_list | grep -wf pods.txt | awk '{print "kubectl get pods -n",$1,$2}
 scp "/data/karlkang/kg_contest_tool/download/top100_$actid.csv" "user_00@9.146.222.202:/cfs/cm3/upload/kg_contest_data_tool"
 ```
 
-
-# nginx
-
-```bash
-nginx -g 'daemon off;'
-nginx -s reload
-nginx -s quit
-```
-
-```conf
-http {
-  ...
-  server: {
-    # 配置下载
-        location /download {
-            alias D:\\download;
-            autoindex on;
-            autoindex_exact_size off;
-        }
-  }
-  ...
-}
-```
-
-
 # supervisor
 ```bash
 vim /etc/supervisor/conf.d/xxx.conf
