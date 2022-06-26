@@ -216,11 +216,11 @@ subsets:
 而Ingress就是为外部进入集群的请求提供路由规则的集合，如下图所示
 
 ```
-    internet
-        |
-   [ Ingress ]
-   --|-----|--
-   [ Services ]
+         internet
+             |
+        [ Ingress ]
+   --|--------------|--
+   [ Service1 ] [ Service2 ]
 ```
 
 Ingress可以给service提供集群外部访问的URL、负载均衡、SSL终止、HTTP路由等。可以为服务提供七层负载均衡。

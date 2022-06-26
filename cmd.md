@@ -160,27 +160,32 @@ git submodule update --init --recursive
 
 # Linux
 
-## tar |uniq |whereis |mv |find |ls
+## tar |uniq |whereis |mv |ls
 ```bash
-
+# tar
 tar -xzvf <input.tar.gz>
 tar -czvf <output.tar.gz> <inputfile>...
 # -x --extract, -c --create, -z --gzip... , -v --verbose, -f --file
 
+# uniq
 uniq | wc -l
+
 tail -n 5 # tail 默认展示后10行
+
 head -n 20 text.txt |tail -n 10 # 第11~20行
+
 cat text.txt |wc -l
 tailf <log-file> # tail -f <log-file>
 
-lsof |grep delete
+# lsof
+lsof |grep delete |awk -F' ' '{print $10}' |sort |uniq
+
+
 which python
 whereis python
 
 # 一次移动多个
 mv SOURCE... -t DIRECTORY
-
-find . -name "*.c"
 
 sudo ls -al /proc/22686/fd
 ls -alhr ./
@@ -279,7 +284,7 @@ journalctl -u kubelet
 while read -r line; do echo $line; done < /tmp/.kubetmp
 ```
 
-## grep | awk | sed
+## grep | awk | sed | find
 
 ```bash
 # grep 提取字符串
@@ -317,6 +322,12 @@ cat all_pods_list | grep -wf pods.txt | awk '{print "kubectl get pods -n",$1,$2}
 ```
 scp "/data/karlkang/kg_contest_tool/download/top100_$actid.csv" "user_00@9.146.222.202:/cfs/cm3/upload/kg_contest_data_tool"
 ```
+
+## chmod | chwon
+```
+chwon -R root /var/run/httpd.pid
+```
+
 
 # supervisor
 ```bash
