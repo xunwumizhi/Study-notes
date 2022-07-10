@@ -36,6 +36,16 @@ fi
 if [[ "$name" != "Tom" ]]; then echo $name" != Tom"; else echo "Tom"; fi
 ```
 
+# for range
+
+```bash
+# 管道接循环
+ls -rlth /data/services/ | grep -v "总用量" | awk '{print $NF}' | while read f; do echo $f; done
+
+# for in
+for i in $(find /data/log -type f -mtime +7);do > $i;done;
+```
+
 
 # mysql
 
