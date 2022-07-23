@@ -1,16 +1,5 @@
 # VScode
 
-```
-Ctrl+Shift+k # 删除行
-Ctrl+Shift+down # 复制
-Alt+down # 交换
-
-```
-
-
-
-
-
 ssh远程开发。搜索remote develop插件，安装
 
 本地打开`~/.ssh/config`
