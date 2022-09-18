@@ -40,10 +40,12 @@ if [[ "$name" != "Tom" ]]; then echo $name" != Tom"; else echo "Tom"; fi
 
 ```bash
 # 管道接循环
+cat lines.txt |while read f; do echo $f; done
 ls -rlth /data/services/ | grep -v "总用量" | awk '{print $NF}' | while read f; do echo $f; done
 
 # for in
-for i in $(find /data/log -type f -mtime +7);do > $i;done;
+for i in $(find /data/log -type f -mtime +7); do > $i; done
+for i in $(cat lines.txt); do bash run.sh $i; done
 ```
 
 
