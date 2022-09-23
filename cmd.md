@@ -70,7 +70,7 @@ ssh配置
 ```bash
 ssh-keygen -t rsa -C "你的邮箱"
 # Enter file in which to save the key (/Users/kingboy/.ssh/id_rsa): 
-# 命名私钥，默认是id_rsa，最好保持默认吧，不然要额外进行配置
+# 命名私钥，默认是id_rsa，多个地方可以共用一套公私密钥对
 
 ssh-copy-id -i container_rsa.pub <linuxUserName>@<host-ip>
 # 手动复制
@@ -82,6 +82,7 @@ cat ~/.ssh/authorized_keys
 # 非默认命名密钥对，需要配置 ssh 管理秘钥
 ps -ef |grep ssh-agent
 ssh-add ~/.ssh/git_rsa
+
 # 或者配置`~/.ssh/config`
 ```bash
 vim ~/.ssh/config
@@ -273,8 +274,10 @@ netstat -i # 网卡统计
 sar -n DEV 1
 
 tcpdump -i eth0 -nn tcp port 80
+tcpdump -i eth0 -nn host 10.0.0.1
+tcpdump -i eth0 -nn tcp [src] port 80 and host 10.0.0.1
 
-tcpdump -i eth0 -nn -s0 -v tcp port 80 [or host 35.190.27.188]
+tcpdump -i eth0 -nn -s0 -v tcp port 80 [或者指定IP/域名 host 35.190.27.188]
 # -i : 选择要捕获的接口，通常是以太网卡或无线网卡，也可以是 vlan 或其他特殊接口。如果该系统上只有一个网络接口，则无需指定。
 # -nn : 单个 n 表示不解析域名，直接显示 IP；两个 n 表示不解析域名和端口。这样不仅方便查看 IP 和端口号，而且在抓取大量数据时非常高效，因为域名解析会降低抓取速度。表示不解析抓包中的域名（即不反向解析）、协议以及端口号。
 # -s0 : tcpdump 默认只会截取前 96 字节的内容，要想截取所有的报文内容，可以使用 -s number， number 就是你要截取的报文字节数，如果是 0 的话，表示截取报文全部内容。

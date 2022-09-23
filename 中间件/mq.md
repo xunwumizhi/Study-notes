@@ -366,10 +366,11 @@ Kafka 定义了两类副本：领导者副本（Leader Replica）和追随者副
 bin/kafka-topics.sh --bootstrap-server <broker_host:port> --create --topic <my_topic_name> --partitions 1 --replication-factor 1
 
 # 主题 list
-bin/kafka-topics.sh --bootstrap-server broker_host:port --list
+bin/kafka-topics.sh --bootstrap-server <broker_host:port> --list
 
 # 主题详细
 bin/kafka-topics.sh --bootstrap-server <broker_host:port> --describe --topic <topic_name>
+# bin/kafka-topics.sh --zookeeper <broker_host:port> --describe --topic <topic_name>
 
 # 生产消息
 ```bash
