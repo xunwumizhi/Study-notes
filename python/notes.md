@@ -19,6 +19,14 @@ from requests import xx
 ```py
 # bytes 转 str
 bs.encode("utf-8")
+
+# str 函数
+s = "hello world"
+s.startswith()
+
+print("" is None)
+print("" is not None)
+print("" == "")
 ```
 
 ## 其他
@@ -36,9 +44,12 @@ dict = {
 
 ```py
 # 流程处理
-if code != 200:
-    # do
-if code == 400:
+if num == 3:            # 判断num的值
+    print('boss')
+elif num == 2:
+    print('user')
+else:
+    print('roadman')     # 条件均不成立时输出
 
 # 异常处理
 try:
@@ -49,6 +60,8 @@ else:
 
 # 类型断言
 if isinstance(cpu, int):
+    print("is")
+
 # 类型转换
 int()
 str()
@@ -60,6 +73,10 @@ str()
 
 ```py
 print()
+name = 'word'
+age = 13
+s1 = 'hello %s' % name
+s2 = 'I am %s, %d years old' % (name, age)
 ```
 
 ## requests
