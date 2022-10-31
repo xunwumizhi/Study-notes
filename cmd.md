@@ -173,6 +173,8 @@ git clean --help
 git clean -ndf    # 手动删除文件
 
 # tracked file, 对已有文件操作，等于 Linux rm 后再 git add
+# git rm -r --cached .
+# git add .
 git rm -rf ${file}
 ```
 
@@ -412,6 +414,64 @@ stress --cpu 1 --timeout 60
 # 并发10个请求测试Nginx性能，总共测试100个请求
 $ ab -c 10 -n 100 <http-url>
 # 或者 -n 请求次数 换成 -t 请求时间
+```
+
+# 系统性能分析
+
+## CPU
+```bash
+uptime
+# 02:34:03 # 当前时间
+# up 2 days, 20:14,  1 user,  # 系统运行时长
+# load average: 0.63, 0.83, 0.88 # 过去 1 分钟、5 分钟、15 分钟的平均负载
+man uptime
+# top 第一行信息包含了 uptime
+top 
+
+# 查看 CPU 个数（核数）
+grep "processor" /proc/cpuinfo
+
+# stress 提高压力
+stress --cpu 1 --timeout 600
+watch -d update
+
+# 多核 CPU 状态工具 -P指定CPU 5统计间隔 1输出一次
+mpstat -P ALL 5 1
+# 多核进程状态分析工具 pidstat -u 5 1
+pidstat -u 5 1
+# -d 分析 io
+# -w 分析 switch
+```
+
+## 进程
+
+中断与切换
+```bash
+# 系统切换总览
+vmstat 5
+# 进程切换
+pidstat -w
+
+# 查看中断
+cat /proc/interrupts
+cat /proc/stat |grep ^cpu
+
+# 查看进程调用，找到父进程
+pstree | grep stress
+
+# 分析某个进程函数分析 -g 显示调用
+# 实时
+sudo perf top -g -p <pid>
+# 采集后再看
+perf record -g
+perf report
+```
+
+
+# cpp/c debug
+```bash
+# 检查符号表
+ldd -r
 ```
 
 # supervisor
