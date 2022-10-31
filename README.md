@@ -1,25 +1,18 @@
 # Study-notes
 
+[常用cmd](./cmd.md)
 
+[shell脚本编写](./shell.md)
 
-## JAVA
+[设计模式代码](./%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.md)
 
+[中间件](./中间件)
 
+[解决方案系统设计](./解决方案)
 
-## 设计模式
+[文档资料](./doc/)
 
-
-
-## 计算机网络
-
-
-
----
-
-C及操作系统、MySQL、Spring、算法笔记（剑指offer）
-
-JavaEE，web
-
+[TODO](./TODO.md)
 
 # pic index
 

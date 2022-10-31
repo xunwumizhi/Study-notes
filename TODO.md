@@ -41,3 +41,20 @@ https://github.com/rakyll/hey
 ```
 ab -n 10000 -c 500
 ```
+
+
+# 八股文
+
+## 网络
+
+Keepalive  TCP HTTP 保活
+
+https://mp.weixin.qq.com/s/25atTs4b-vORIx525ur_aw
+
+
+## 操作系统
+
+epoll fd文件句柄：
+
+深入理解 Linux 的 epoll 机制：
+https://mp.weixin.qq.com/s/Bhoym1M8Pa_G3926p7_czg
