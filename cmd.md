@@ -180,8 +180,10 @@ git rm -rf ${file}
 
 ## submodule
 
-git clone下来的工程中带有submodule时，初始的时候，submodule的内容并不会自动下载下来的，此时，只需执行如下命令：
 ```bash
+git clone --recursive <repo>
+
+# 手动初始化 submodule
 git submodule init
 git submodule update
 # 等价于
@@ -467,6 +469,15 @@ perf record -g
 perf report
 ```
 
+## 磁盘IO
+
+机器整体IO状态：iostat
+
+进程定位：
+```bash
+iotop
+pidstat -d 3
+```
 
 # cpp/c debug
 ```bash
