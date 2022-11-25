@@ -475,7 +475,10 @@ perf report
 
 进程定位：
 ```bash
-iotop
+# -o --only只显示正执行的进程
+# -b --batch 非交互模式，记录日志 -t --time 时间戳
+# -d --delay=SEC 采样间隔
+iotop -o -b -t -d 3
 pidstat -d 3
 ```
 

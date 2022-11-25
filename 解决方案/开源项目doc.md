@@ -1,4 +1,4 @@
-# 基础知识
+# 综合基础知识
 
 小林coding  https://xiaolincoding.com/
 
@@ -9,11 +9,18 @@ https://github.com/pcottle/learnGitBranching
 
 # 管理系统
 
-go-zero
-带有 cli 工具的云原生 Go 微服务框架，可提高生产力。
-https://github.com/zeromicro/go-zero
+- gin-vue-admin
 
+- go-admin
 
+⭐ GitHub stars: 7.6k+
+基于 Gin + Vue + Element UI 的独立前后端权限管理系统的脚手架。
+https://github.com/go-admin-team/go-admin。
+
+# 数据库
+
+cstack/db_tutorial: Writing a sqlite clone from scratch in C
+https://github.com/cstack/db_tutorial
 
 # 语言学习资源
 
@@ -42,5 +49,9 @@ Go语言入门教程，Golang入门教程  http://c.biancheng.net/golang/
 《GO 命令教程》 - 书栈网 · BookStack  https://www.bookstack.cn/books/go_command_tutorial
 
 golang-standards/project-layout: Standard Go Project Layout  https://github.com/golang-standards/project-layout
+
+go-zero
+带有 cli 工具的云原生 Go 微服务框架，可提高生产力。
+https://github.com/zeromicro/go-zero
 
 ## JavaScript、Vue
