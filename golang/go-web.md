@@ -1,3 +1,8 @@
+## HTTP server client
+
+HTTP客户端使用了连接池，避免频繁建立带来的大开销，
+
+HTTP服务端的路由只是一个静态索引匹配，对于动态路由匹配支持的不好，并且每一个请求都会创建一个gouroutine进行处理，海量请求到来时需要考虑这块的性能瓶颈；
 
 ## web 标准库
 
@@ -38,60 +43,6 @@ func  HandleWrapper(h func(http.ResponseWriter, *http.Request)) func(http.Respon
 		w.Header().Set("Content-Tpye", "application/json")
 	}
 }
-```
-
-
--   context
-
-上下文，升级版的goroutine消息传递channel，方便父routine控制子routine
-
-## fasthttp
-
-```go
-ctx *fasthttp.RequestCtx
-ctx.QueryArgs().Peek()
-ctx.UserValue("urlArg")
-ctx.PostBody()
-
-```
-
-## beego
-
-```bash
-bee version
-bee api apiproject
-bee run  # 热发布，修改后无需再次启动程序
-bee pack
-
-# 自动化生成文档
-bee run -gendoc=true -downdoc=true
-
-```
-
-注解路由，`[options,get]`里面逗号分隔，不能带空格！！
-
-```go
-// @router /staticblock/:key [options,get]
-func (this *CMSController) StaticBlock() {
-
-}
-
-// 并在 router.go 中通过如下方式注册路由：
-beego.Include(&CMSController{})
-
-```
-
-过滤，重定向
-
-```go
-beego.InsertFilter("/*", beego.BeforeRouter, FilterUser)
-
-if ctx.Request.Method == "OPTIONS" {
-    // ctx.Abort(200, "Network is ok")
-    ctx.Output.Body([]byte("Network is ok"))
-    return
-}
-
 ```
 
 ## Json Patch
