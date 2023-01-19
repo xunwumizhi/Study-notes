@@ -115,7 +115,7 @@ git push -u origin master
 # after fork
 git remote -v
 git remote add upstream <origin-repo>
-# git remote set-url upstream <origin-repo> # 添加并修改
+# git remote set-url <upstream> <origin-repo> # 添加并修改
 git remote -v
 ```
 
@@ -255,7 +255,7 @@ df -h
 du -hs --exclude=/proc /* | sort -hr
 # 当前目录
 du -hs * 
-# 指定目录深度								
+# 指定目录深度 -d --max-depth 统计隐藏文件		
 du -h -d 1
 # 所有文件，不只是目录
 du -ha									
