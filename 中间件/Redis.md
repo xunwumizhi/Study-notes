@@ -15,3 +15,9 @@ LRANGE  切片时， start与offset都是下标，包含offset，  因此得到�
 map[string]string
 
 不支持类型嵌套
+
+## 跳表
+
+![调表](../asset/skip-list.jpg)
+
+查找区间内的所有元素，比红黑树方便，范围查询时，红黑树需要中序遍历

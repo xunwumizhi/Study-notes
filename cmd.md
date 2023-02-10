@@ -192,6 +192,15 @@ git submodule update --init --recursive
 
 # Linux
 
+## fd / cat / tail
+
+```bash
+# 检车1号进程的 stderr
+ls -hl /proc/1/fd/2
+# 1号进程的 stderr
+tail -f /proc/1/fd/2
+```
+
 ## tar |uniq |whereis |mv |ls
 ```bash
 # tar
@@ -349,9 +358,18 @@ while read -r line; do echo $line; done < /tmp/.kubetmp
 # grep 提取字符串
 # -P, --perl-regexp
 # -E, --extended-regexp
+# -n, print line number
+
 echo office365 | grep -P '\d+' -o
 find . -name "*.txt" | xargs grep -P 'regex' -o
 
+# 全局 grep
+grep -rw 'topic_name' --exclude-dir={log,logs} --exclude=*.{log,csv,txt,bak} /data/*
+grep -C 3 <content> # 上下几行
+grep -nr "Hello" /codes.txt
+```
+
+```bash
 # atime	access time	访问时间	文件中的数据库最后被访问的时间
 # mtime	modify time	修改时间	文件内容被修改的最后时间
 # ctime	change time	变化时间	文件的元数据发生变化。比如权限，所有者等
@@ -379,10 +397,6 @@ echo '{"code":46015,"msg":"bad request"}' |sed 's/.*code":\([0-9]*\).*/\1/g'
 pattern1=XXX
 pattern2=XXX 
 sed -i "s/$pattern1/$pattern2/g" inputfile
-
-
-grep -C 3 <content> # 上下几行
-grep -r "" /data
 
 cat all_pods_list | grep -wf pods.txt | awk '{print $1,$2}' | while read x;do kubectl get pods -n $x; done
 cat all_pods_list | grep -wf pods.txt | awk '{print "kubectl get pods -n",$1,$2}' | xargs -P 5 -I {} bash -c {}
@@ -511,6 +525,17 @@ PATH路径，全局设置在`/etc/paths.d`下面新建文件，直接写路径�
 # -e env list
 docker run --name csql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql
 
+docker run --name cmaria -p 3307:3307 -e MYSQL_ROOT_PASSWORD=root -d mariadb
+
 docker run --name credis -p 6379:6379 -d redis
 ```
 
+- mongo
+```
+docker pull mongo:4.4.18
+
+docker run -d --name cmongo_4 mongo:4.4.18
+# docker run -d --name cmongo_4 -p 27017:27017 mongo:4.4.18
+
+docker exec -it cmongo_4 bash
+```

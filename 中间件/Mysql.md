@@ -438,6 +438,14 @@ left join 的语义，就不能把被驱动表的字段放在 where 条件里面
 
 # SQL 
 
+## 问题思考
+
+- Mysql中使用json格式存储数据好吗？
+
+https://blog.csdn.net/zhongzhen7355/article/details/100092893
+
+不能用于结构化查询！
+
 ## CMD
 
 ```sql
