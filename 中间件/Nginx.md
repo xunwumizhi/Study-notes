@@ -1,10 +1,19 @@
 # 运维cmd
 ```bash
 nginx -g 'daemon off;'
+nginx -t -c conf/nginx.conf # 检测配置文件是否正常  
 nginx -s reload
 nginx -s quit
+nginx -s stop # 强制终止Nginx，不管当前是否有任务在执行  
 ```
 
+# 系统了解
+
+Nginx一网打尽：动静分离、压缩、缓存、黑白名单、跨域、高可用、性能优化...想要的这都有！ - 掘金
+https://juejin.cn/post/7112826654291918855
+
+Nginx一网打尽：动静分离、压缩、缓存、黑白名单、跨域、高可用、性能优化...
+https://mp.weixin.qq.com/s/yYkGDN4jlWw6rj3pGAbDJg
 
 # 概念
 

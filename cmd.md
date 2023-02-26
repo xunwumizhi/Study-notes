@@ -142,7 +142,7 @@ git tag -a v1.0 -m "v1.0版本发布"
 git commit --amend --no-edit
 git commit --amend -m "add new file"
 
-git stash
+git stash [[push] [--] [<pathspec>...]]
 git stash list
 git stash pop
 git stash drop stash@{0}
