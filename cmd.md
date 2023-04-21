@@ -31,7 +31,7 @@ O # 插入上一行
 # 剪切
 dd    # 行
 dgg   # 删除当前行至文档首部
-dG    # 
+dG    # 删除当前行至文档尾部
 
 d$    # 删除当前字符至行尾
 d^    # 
@@ -154,6 +154,8 @@ git rebase <commit>
 # rebase交互式界面编辑
 git rebase -i <commit>
 git diff [options] <commit> <commit> [--] [<path>...]
+
+git log --stat <fiel-path>
 ```
 
 ## undo
@@ -306,6 +308,9 @@ tcpdump -i eth0 -nn -s0 -v tcp port 80 [或者指定IP/域名 host 35.190.27.188
 ```bash
 # curl 网络请求
 curl -i -H "Content-Type: application/json" -X POST -d '{""}' "<URL>"
+
+# 手动指定解析IP
+curl -i "http://<host-name>/path" --resolve <host-name>:80:<target-IP>
 
 # 下载并重命名
 wget -O <localPath> <remoteUrl>
@@ -527,7 +532,10 @@ docker run --name csql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql
 
 docker run --name cmaria -p 3307:3307 -e MYSQL_ROOT_PASSWORD=root -d mariadb
 
-docker run --name credis -p 6379:6379 -d redis
+# docker run --name credis -p 6379:6379 -d redis
+docker run --name credis -d redis
+docker exec -it credis bash
+# redis-cli
 ```
 
 - mongo

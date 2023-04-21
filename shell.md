@@ -84,3 +84,11 @@ else
     echo "bad code"${response}
 fi
 ```
+
+# 综合例子
+
+192. 统计词频 - 力扣（LeetCode）: https://leetcode.cn/problems/word-frequency/
+
+```bash
+cat words.txt |tr -s ' ' '\n' |sort |uniq -c |sort -nr |awk '{print $2" "$1}'
+```

@@ -1,4 +1,9 @@
-# 应用场景
+# TODO
+
+颠覆 Kafka 的统治，新一代云原生消息系统 Pulsar 震撼来袭！
+https://mp.weixin.qq.com/s/nHBclYU-F0eNb7e3S2MHzA
+
+# 思考题
 
 ## Kafka 为什么不像 Redis 和 MySQL 那样支持读写分离？
 

@@ -1,3 +1,13 @@
+# 聚合帖 
+
+Redis系列-我用1W字总结了所有的点，确定不了解一下吗？ - 掘金
+https://juejin.cn/post/6991080701365846046
+万字长文，九大方面归纳总结Redis
+https://mp.weixin.qq.com/s/cHgrs2QWEbp0Uj00W_St5w
+
+
+# 零散总结
+
 ## 高性能原因
 
 完全基于内存

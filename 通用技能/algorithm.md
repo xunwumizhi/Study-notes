@@ -3,6 +3,9 @@
 go 语言入门 - algorithm-pattern
 https://greyireland.gitbook.io/algorithm-pattern/ru-men-pian/golang
 
+fork-by-xunwumizhi — algorithm-pattern
+https://github.com/xunwumizhi/algorithm-pattern
+
 # 数据结构
 ## 二叉树
 
