@@ -390,6 +390,8 @@ find . -type f -print0 |xargs -0 rm -rf
 grep "key" <file> |awk -F '=' '{print $2}'  
 lsof |grep delete |awk -F' ' '{print $10}' |sort |uniq
 
+awk -F '"' '{print $NF}'
+
 # 获取key的值
 # sed 正则提取字符串，用单引号'可用转义字符
 echo here365test | sed 's/.*ere\([0-9]*\).*/\1/g'
@@ -405,6 +407,10 @@ sed -i "s/$pattern1/$pattern2/g" inputfile
 
 cat all_pods_list | grep -wf pods.txt | awk '{print $1,$2}' | while read x;do kubectl get pods -n $x; done
 cat all_pods_list | grep -wf pods.txt | awk '{print "kubectl get pods -n",$1,$2}' | xargs -P 5 -I {} bash -c {}
+
+# 第二条命令会将每行中所有以"_999999_"开头的字符串都替换为空，而第一条命令只会替换每行中第一个匹配到的字符串。
+grep -oE '_999999_[0-9]+' file.txt | sed 's/^_999999_//'
+grep -oE '_999999_[0-9]+' file.txt | sed 's/^_999999_//g'
 ```
 
 ## scp
