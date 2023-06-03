@@ -134,7 +134,12 @@ git remote prune origin
 
 ## tag
 ```bash
-git tag -a v1.0 -m "v1.0版本发布"
+git tag [-l pattern...]
+git tag -a v1.0 [commit-id] -m "v1.0版本发布"
+git show v1.0
+git push origin v1.0
+
+git tag -d v1.0
 ```
 
 ## commit
