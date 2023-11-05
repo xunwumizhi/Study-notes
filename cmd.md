@@ -189,7 +189,7 @@ git rm -rf ${file}
 
 ```bash
 git clone --recursive <repo>
-
+git clone <repo> <local-dir>
 # 手动初始化 submodule
 git submodule init
 git submodule update
@@ -295,7 +295,7 @@ sar -n DEV 1
 
 tcpdump -i eth0 -nn tcp port 80
 tcpdump -i eth0 -nn host 10.0.0.1
-tcpdump -i eth0 -nn tcp [src] port 80 and host 10.0.0.1
+tcpdump -i any -nn tcp [src] port 80 and host 10.0.0.1
 
 tcpdump -i eth0 -nn -s0 -v tcp port 80 [或者指定IP/域名 host 35.190.27.188]
 # -i : 选择要捕获的接口，通常是以太网卡或无线网卡，也可以是 vlan 或其他特殊接口。如果该系统上只有一个网络接口，则无需指定。
@@ -416,11 +416,14 @@ cat all_pods_list | grep -wf pods.txt | awk '{print "kubectl get pods -n",$1,$2}
 # 第二条命令会将每行中所有以"_999999_"开头的字符串都替换为空，而第一条命令只会替换每行中第一个匹配到的字符串。
 grep -oE '_999999_[0-9]+' file.txt | sed 's/^_999999_//'
 grep -oE '_999999_[0-9]+' file.txt | sed 's/^_999999_//g'
+
+# {} 表示当前文件的路径 \ 表示命令结束
+find ./ -type f ! -name init.sh -exec sed -i "s/$placehold/$project/g" {} \;
 ```
 
 ## scp
 ```
-scp "/data/karlkang/kg_contest_tool/download/top100_$actid.csv" "user_00@9.146.222.202:/cfs/cm3/upload/kg_contest_data_tool"
+scp "**.csv" "user_name@ip:target_file_name"
 ```
 
 ## chmod | chwon
@@ -447,6 +450,19 @@ stress --cpu 1 --timeout 60
 $ ab -c 10 -n 100 <http-url>
 # 或者 -n 请求次数 换成 -t 请求时间
 ```
+
+# whistle
+
+avwo/whistle: HTTP, HTTP2, HTTPS, Websocket debugging proxy
+
+https://github.com/avwo/whistle
+
+```sh
+w2 status
+w2 start
+w2 stop
+```
+
 
 # 系统性能分析
 
