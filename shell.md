@@ -85,6 +85,12 @@ else
 fi
 ```
 
+```bash
+# 引用本地文件JSON文件
+addr="120.0.0.1:8080"
+curl -i -X POST -d "@req.json" -H "Content-Type: application/json" http://$addr/api
+```
+
 # 综合例子
 
 192. 统计词频 - 力扣（LeetCode）: https://leetcode.cn/problems/word-frequency/
