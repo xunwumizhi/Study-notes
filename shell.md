@@ -24,10 +24,15 @@ echo ${cmd}|awk '{run=$0;system(run)}'
 
 # if else
 
+Shell test 命令 | 菜鸟教程
+https://www.runoob.com/linux/linux-shell-test.html
+
 ```bash
 # sh 文件
 if [[ "$name" = "Tom" ]]; then
     echo ${name}" = Tom"
+elif [[ "$name" = "Jerry" ]]; then
+    echo "elif"
 else
     echo ${name}
 fi

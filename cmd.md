@@ -16,7 +16,7 @@ k # 上一行
 w # 向尾部移动一个单词（光标停在单词首部）
 b # 向头部移动一个单词
 gg # 光标移动到首行
-G  # 尾行
+G  # 最后一行
 
 
 # 插入
@@ -46,7 +46,7 @@ Ctrl+r # 反撤销 redo
 
 # 复制粘贴
 yy  # 复制整行
-ggyG # 全部复制，先按gg，然后ggyG
+ggyG # 全部复制，先按gg，然后yG
 p   # 粘贴至下一行
 
 yyp # 复制到下一行
@@ -74,8 +74,8 @@ ssh-keygen -t rsa -C "你的邮箱"
 
 ssh-copy-id -i container_rsa.pub <linuxUserName>@<host-ip>
 # 手动复制
-
 clip < ~/.ssh/id_rsa.pub  //将key复制到剪切板
+
 # 登录主机，查看是否成功收到
 cat ~/.ssh/authorized_keys
 
@@ -199,21 +199,28 @@ git submodule update --init --recursive
 
 # Linux
 
-## fd / cat / tail
+## fd / cat / tail / cp
 
 ```bash
 # 检车1号进程的 stderr
 ls -hl /proc/1/fd/2
 # 1号进程的 stderr
 tail -f /proc/1/fd/2
+
+cp -r /source_directory/* /destination_directory/
 ```
 
-## tar |uniq |whereis |mv |ls
+## tar | uniq | whereis | mv | ls
 ```bash
 # tar
 tar -xzvf <input.tar.gz>
+tar -xzvf <input.tar.gz> -C <output-dir>
+
 tar -czvf <output.tar.gz> <inputfile>...
 # -x --extract, -c --create, -z --gzip... , -v --verbose, -f --file
+
+# 大小逆序排列，并不会列出目录下的文件
+ls -lh | sort -k 5 -rh
 
 # uniq
 uniq | wc -l
@@ -276,6 +283,7 @@ du -h -d 1
 # 所有文件，不只是目录
 du -ha									
 
+du -ah <path> |sort -rh
 ```
 
 
@@ -342,7 +350,7 @@ cat /etc/group
 mount
 ```
 
-## nc |nohup |journalctl
+## nc | nohup | journalctl
 ```bash
 init 3
 
@@ -551,26 +559,18 @@ PATH路径，全局设置在`/etc/paths.d`下面新建文件，直接写路径�
 /usr/local/go/bin
 ```
 
-# docker
+# Python
 
-```bash
-# -e env list
-docker run --name csql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql
+```sh
+# 创建环境
+sudo conda create --name <my-env>
 
-docker run --name cmaria -p 3307:3307 -e MYSQL_ROOT_PASSWORD=root -d mariadb
+# 使用环境
+source /opt/miniconda3/bin/activate <my-env>
+# 老版本可以直接用 activate 命令
+# conda activate <my-env>
 
-# docker run --name credis -p 6379:6379 -d redis
-docker run --name credis -d redis
-docker exec -it credis bash
-# redis-cli
-```
+# 开发前一定要记得确认是不是自己环境
+conda env list
 
-- mongo
-```
-docker pull mongo:4.4.18
-
-docker run -d --name cmongo_4 mongo:4.4.18
-# docker run -d --name cmongo_4 -p 27017:27017 mongo:4.4.18
-
-docker exec -it cmongo_4 bash
 ```

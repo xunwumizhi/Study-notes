@@ -1908,6 +1908,8 @@ https://docker_practice.gitee.io/zh-cn/install/ubuntu.html
 sudo groupadd docker
 sudo gpasswd -a ${USER} docker
 sudo systemctl restart docker
+# sudo service docker restart # ubuntu
+
 # 当前用户退出重新登录
 docker ps
 
