@@ -1,3 +1,11 @@
+# log
+
+```shell
+printf "Number: %d\n" 42
+
+echo
+```
+
 # basic
 
 ```bash
@@ -40,6 +48,33 @@ fi
 # 在 shell 直接执行
 if [[ "$name" != "Tom" ]]; then echo $name" != Tom"; else echo "Tom"; fi
 ```
+
+# switch
+
+```shell
+case $aNum in
+    1)  echo '你选择了 1'
+    ;;
+    2)  echo '你选择了 2'
+    ;;
+    3)  echo '你选择了 3'
+    ;;
+    4)  echo '你选择了 4'
+    ;;
+    *)  echo '你没有输入 1 到 4 之间的数字'
+    ;;
+esac
+
+case "$site" in
+   "runoob") echo "菜鸟教程"
+   ;;
+   "google") echo "Google 搜索"
+   ;;
+   "taobao") echo "淘宝网"
+   ;;
+esac
+```
+
 
 # for range
 
